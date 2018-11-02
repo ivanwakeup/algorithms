@@ -49,14 +49,70 @@ class BinarySearchTree:
 
         insert_helper(val, self.root, None)
 
-    def delete(self, val):
-        pass
+    def delete(self, key):
+        root = self.root
+        if not root:
+            return None
+        start = prev = root
+        while start:
+
+            if start.val == key:
+                if not start.right:
+                    if prev.left == key:
+                        prev.left = start.left
+                    else:
+                        prev.right = start.right
+                    break
+                else:
+                    next = self.find_min(start.right)
+                    next.left = start.left
+                    next.right = start.right
+                    if prev.left == key:
+                        prev.left = next
+                    else:
+                        prev.right = next
+                    break
+
+            elif start.val < key:
+                prev = start
+                start = start.right
+            else:
+                prev = start
+                start = start.left
+
+        return root
+
+    def find_min(self, root):
+        while root.left:
+            root = root.left
+        return root
 
     def transplant(self, node1, node2):
+        #should replace the tree rooted at node1 with node2 and node2 with node1
         pass
 
     def successor(self, node):
-        pass
+        #find node with the smallest key greater than given node
+        if not node.right:
+            return None
+        start = node.right
+        while start:
+            prev = start
+            start = start.left
+        return prev
+
+    def to_array(self):
+        root = self.root
+        result = []
+        queue = [root]
+        while queue:
+            node = queue.pop(0)
+            if node.left:
+                queue.append(node.left)
+            if node.right:
+                queue.append(node.right)
+            result.append(node.val)
+        return result
 
     def to_inorder_array(self):
         pass
@@ -68,11 +124,14 @@ class BinarySearchTree:
         pass
 
 
-data = TreeNode(3)
-data.left = TreeNode(2)
-data.right = TreeNode(4)
-data.left.left = TreeNode(1)
-data.right.right = TreeNode(5)
+
+
+data = TreeNode(5)
+data.left = TreeNode(3)
+data.right = TreeNode(6)
+data.left.left = TreeNode(2)
+data.left.right = TreeNode(4)
+data.right.right = TreeNode(7)
 
 tree = BinarySearchTree(data)
 
@@ -80,9 +139,16 @@ tree.search(5)
 tree.search(10)
 
 
-tree.insert(7)
+#tree.insert(7)
 
 tree.search(7)
 tree.search(5)
 tree.search(1)
+
+#tree.delete(3)
+
+arr = tree.to_array()
+
+print(arr)
+
 

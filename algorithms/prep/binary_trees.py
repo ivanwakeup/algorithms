@@ -50,37 +50,32 @@ class BinarySearchTree:
         insert_helper(val, self.root, None)
 
     def delete(self, key):
+        def delete_root(root):
+            if not root:
+                return None
+            if not root.right:
+                return root.left
+            x = self.find_min(root.right)
+            x.left = root.left
+            return root.right
+
         root = self.root
-        if not root:
-            return None
-        start = prev = root
-        while start:
+        if not root or root.val == key:
+            return delete_root(root)
 
-            if start.val == key:
-                if not start.right:
-                    if prev.left == key:
-                        prev.left = start.left
-                    else:
-                        prev.right = start.right
+        while root:
+            if root.val < key:
+                if root.right.val == key or not root.right:
+                    root.right = delete_root(root.right)
                     break
-                else:
-                    next = self.find_min(start.right)
-                    next.left = start.left
-                    next.right = start.right
-                    if prev.left == key:
-                        prev.left = next
-                    else:
-                        prev.right = next
-                    break
-
-            elif start.val < key:
-                prev = start
-                start = start.right
+                root = root.right
             else:
-                prev = start
-                start = start.left
+                if root.left.val == key or not root.left:
+                    root.left = delete_root(root.left)
+                    break
+                root = root.left
 
-        return root
+        return self.root
 
     def find_min(self, root):
         while root.left:
@@ -107,10 +102,11 @@ class BinarySearchTree:
         queue = [root]
         while queue:
             node = queue.pop(0)
-            if node.left:
-                queue.append(node.left)
-            if node.right:
-                queue.append(node.right)
+            if not node:
+                result.append(None)
+                continue
+            queue.append(node.left if node.left else None)
+            queue.append(node.right if node.right else None)
             result.append(node.val)
         return result
 
@@ -145,7 +141,8 @@ tree.search(7)
 tree.search(5)
 tree.search(1)
 
-#tree.delete(3)
+tree.delete(3)
+tree.delete(4)
 
 arr = tree.to_array()
 

@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="082daa1f-4891-4f22-8d4f-cd37d8995a11" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/algorithms/prep/binary_trees.py" beforeDir="false" afterPath="$PROJECT_DIR$/algorithms/prep/binary_trees.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/algorithms/prep/knapsack.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -13,11 +14,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="binary_trees.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/algorithms/prep/binary_trees.py">
+      <file leaf-file-name="knapsack.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/algorithms/prep/knapsack.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="243">
-              <caret line="96" column="19" lean-forward="true" selection-start-line="96" selection-start-column="19" selection-end-line="96" selection-end-column="19" />
+            <state relative-caret-position="240">
+              <caret line="16" column="3" lean-forward="true" selection-start-line="16" selection-start-column="3" selection-end-line="16" selection-end-column="3" />
             </state>
           </provider>
         </entry>
@@ -63,6 +64,7 @@
         <option value="$PROJECT_DIR$/algorithms/prep/linked_list.py" />
         <option value="$PROJECT_DIR$/algorithms/prep/dp_cut_rods.py" />
         <option value="$PROJECT_DIR$/algorithms/prep/binary_trees.py" />
+        <option value="$PROJECT_DIR$/algorithms/prep/knapsack.py" />
       </list>
     </option>
   </component>
@@ -126,7 +128,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.binary_trees">
+  <component name="RunManager" selected="Python.knapsack">
     <configuration name="binary_trees" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="algos-ivanwakeup" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -158,6 +160,24 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/algorithms/prep/dp_cut_rods.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+    </configuration>
+    <configuration name="knapsack" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="algos-ivanwakeup" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/algorithms/prep" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/algorithms/prep/knapsack.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -199,38 +219,20 @@
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
     </configuration>
-    <configuration name="quicksort" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="algos-ivanwakeup" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/algorithms/prep" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/algorithms/prep/quicksort.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-    </configuration>
     <list>
-      <item itemvalue="Python.quicksort" />
       <item itemvalue="Python.priority_queue" />
       <item itemvalue="Python.linked_list" />
       <item itemvalue="Python.binary_trees" />
       <item itemvalue="Python.dp_cut_rods" />
+      <item itemvalue="Python.knapsack" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.knapsack" />
         <item itemvalue="Python.binary_trees" />
         <item itemvalue="Python.dp_cut_rods" />
         <item itemvalue="Python.linked_list" />
         <item itemvalue="Python.priority_queue" />
-        <item itemvalue="Python.quicksort" />
       </list>
     </recent_temporary>
   </component>
@@ -254,12 +256,12 @@
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.22598253" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.32843652" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.32843652" />
       <window_info anchor="bottom" id="Version Control" order="7" />
       <window_info anchor="bottom" id="Python Console" order="7" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Terminal" order="7" weight="0.32948583" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.37565583" />
+      <window_info active="true" anchor="bottom" id="Debug" order="3" visible="true" weight="0.37565583" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.32795697" />
@@ -336,8 +338,18 @@
           <line>72</line>
           <option name="timeStamp" value="30" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/algorithms/prep/knapsack.py</url>
+          <line>26</line>
+          <option name="timeStamp" value="40" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/algorithms/prep/knapsack.py</url>
+          <line>25</line>
+          <option name="timeStamp" value="41" />
+        </line-breakpoint>
       </breakpoints>
-      <option name="time" value="38" />
+      <option name="time" value="42" />
     </breakpoint-manager>
     <watches-manager>
       <configuration name="PythonConfigurationType">
@@ -346,20 +358,6 @@
     </watches-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/algorithms/binary_tree_bfs.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="795">
-          <caret line="53" selection-start-line="53" selection-end-line="56" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/algorithms/all_subsets.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="17" lean-forward="true" selection-start-column="17" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/algorithms/permutations.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="225">
@@ -654,8 +652,22 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/algorithms/prep/binary_trees.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="243">
+        <state relative-caret-position="195">
           <caret line="96" column="19" lean-forward="true" selection-start-line="96" selection-start-column="19" selection-end-line="96" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$APPLICATION_HOME_DIR$/helpers/pydev/_pydev_imps/_pydev_execfile.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="17" selection-start-line="17" selection-end-line="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/algorithms/prep/knapsack.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="16" column="3" lean-forward="true" selection-start-line="16" selection-start-column="3" selection-end-line="16" selection-end-column="3" />
         </state>
       </provider>
     </entry>

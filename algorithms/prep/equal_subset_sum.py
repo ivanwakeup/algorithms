@@ -1,4 +1,4 @@
-data = [1,5,11,5]
+data = [2,2,3,5]
 
 
 def equal_subset_sum(arr):
@@ -6,7 +6,7 @@ def equal_subset_sum(arr):
     if total % 2:
         return False
     target = total//2
-    return has_target(arr, 0, target, {})
+    return has_target(arr, 0, target)
 
 def has_target(arr, i, target):
     if target == 0:
@@ -22,6 +22,9 @@ def has_target(arr, i, target):
     not_includes = has_target(arr, i+1, target)
     result = max(includes, not_includes)
     return result
+
+
+print("recursive subset sum is {}".format(equal_subset_sum(data)))
 
 
 def bottom_up_ess(arr):

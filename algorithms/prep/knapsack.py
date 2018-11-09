@@ -36,4 +36,83 @@ def knapsack(item_idx, capacity, memo):
     return result
 
 
-print(knapsack(len(weights)-1, 10, {}))
+# print(knapsack(len(weights)-1, 10, {}))
+
+
+'''
+have a knapsack S
+items with a size and value (s, v)
+how to maximize the value of items in knapsack?
+
+step 1 - define subproblems
+
+let DP(I, C) = the value attainable by including the current item I in the knapsack with C capacity remaining
+
+DP(I, C) = max {
+    include: value(I) + DP(I+1, C - W(I))
+    not include: DP(I+1, C)
+    for all items in knapsack
+}
+'''
+
+def maximize_knapsack_value(c):
+    weights = [5, 10, 3, 7, 4, 2, 1]
+    values = [8, 12, 1, 9, 4, 1, 0]
+    return do_maximize_knapsack(c, 0, weights, values)
+
+def do_maximize_knapsack(cap, i, weights, values):
+
+    if cap <= 0 or i < 0:
+        return 0
+
+    #this wont work, need to check first if i can include the ith item before i recurse
+    included = 0
+    if cap - weights[i] >= 0:
+        included = values[i] + do_maximize_knapsack(cap-weights[i], i-1, weights, values)
+    not_included = do_maximize_knapsack(cap, i-1, weights, values)
+    result = max(included, not_included)
+
+    return result
+
+print(maximize_knapsack_value(10))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

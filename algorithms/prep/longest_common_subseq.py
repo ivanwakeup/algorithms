@@ -26,16 +26,16 @@ def top_down_longest_common_subsequence(word1, word2, memo):
     if not word1 or not word2:
         return 0
 
-    if word1[-1] == word2[-1]:
-        result = 1 + top_down_longest_common_subsequence(word1[:-1], word2[:-1], memo)
+    if word1[0] == word2[0]:
+        result = 1 + top_down_longest_common_subsequence(word1[1:], word2[1:], memo)
     else:
-        result = max(top_down_longest_common_subsequence(word1, word2[:-1], memo), top_down_longest_common_subsequence(word1[:-1], word2, memo))
+        result = max(top_down_longest_common_subsequence(word1, word2[1:], memo), top_down_longest_common_subsequence(word1[1:], word2, memo))
 
     memo[key] = result
     return result
 
 
-#print(top_down_longest_common_subsequence(word1, word2, {}))
+print(top_down_longest_common_subsequence(word1, word2, {}))
 
 
 '''what is the runtime of the top-down memoized version? best case O(n), worst case O(n^2) because you have to solve LCS twice for each.
@@ -59,7 +59,7 @@ def bottom_up_lcs(word1, word2):
     return dp[-1][-1]
 
 
-print(bottom_up_lcs(word1, word2))
+#print(bottom_up_lcs(word1, word2))
 
 
 '''

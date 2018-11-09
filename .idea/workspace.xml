@@ -1,9 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="BookmarkManager">
+    <bookmark url="file://$PROJECT_DIR$/algorithms/prep/longest_increasing_subseq.py" line="40" mnemonic="3" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="082daa1f-4891-4f22-8d4f-cd37d8995a11" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/algorithms/prep/edit_distance.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/algorithms/prep/equal_subset_sum.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/algorithms/prep/longest_increasing_subseq.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/algos-ivanwakeup.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/algos-ivanwakeup.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/algorithms/prep/edit_distance.py" beforeDir="false" afterPath="$PROJECT_DIR$/algorithms/prep/edit_distance.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/algorithms/prep/knapsack.py" beforeDir="false" afterPath="$PROJECT_DIR$/algorithms/prep/knapsack.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/algorithms/prep/longest_common_subseq.py" beforeDir="false" afterPath="$PROJECT_DIR$/algorithms/prep/longest_common_subseq.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -17,17 +26,53 @@
       <file leaf-file-name="knapsack.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/algorithms/prep/knapsack.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="570">
-              <caret line="38" column="39" selection-start-line="38" selection-start-column="39" selection-end-line="38" selection-end-column="39" />
+            <state relative-caret-position="465">
+              <caret line="76" column="34" lean-forward="true" selection-start-line="76" selection-start-column="34" selection-end-line="76" selection-end-column="34" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="edit_distance.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="equal_subset_sum.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/algorithms/prep/equal_subset_sum.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state>
+              <caret column="16" selection-start-column="16" selection-end-column="16" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="permutations.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/algorithms/permutations.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="195">
+              <caret line="13" lean-forward="true" selection-start-line="13" selection-end-line="13" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="edit_distance.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/algorithms/prep/edit_distance.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="120">
-              <caret line="8" lean-forward="true" selection-start-line="8" selection-end-line="8" />
+            <state relative-caret-position="288">
+              <caret line="61" column="24" selection-start-line="61" selection-start-column="24" selection-end-line="61" selection-end-column="24" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="longest_increasing_subseq.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/algorithms/prep/longest_increasing_subseq.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="258">
+              <caret line="38" column="127" selection-start-line="38" selection-start-column="127" selection-end-line="38" selection-end-column="127" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="longest_common_subseq.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/algorithms/prep/longest_common_subseq.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="45">
+              <caret line="24" lean-forward="true" selection-start-line="24" selection-end-line="24" />
             </state>
           </provider>
         </entry>
@@ -73,8 +118,11 @@
         <option value="$PROJECT_DIR$/algorithms/prep/linked_list.py" />
         <option value="$PROJECT_DIR$/algorithms/prep/dp_cut_rods.py" />
         <option value="$PROJECT_DIR$/algorithms/prep/binary_trees.py" />
-        <option value="$PROJECT_DIR$/algorithms/prep/knapsack.py" />
+        <option value="$PROJECT_DIR$/algorithms/prep/longest_increasing_subseq.py" />
+        <option value="$PROJECT_DIR$/algorithms/prep/longest_common_subseq.py" />
         <option value="$PROJECT_DIR$/algorithms/prep/edit_distance.py" />
+        <option value="$PROJECT_DIR$/algorithms/prep/knapsack.py" />
+        <option value="$PROJECT_DIR$/algorithms/prep/equal_subset_sum.py" />
       </list>
     </option>
   </component>
@@ -116,7 +164,7 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file:///home/ivanwakeup/projects/algorithms/algorithms/prep/dp_cut_rods.py" />
+    <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file:///home/ivanwakeup/projects/algorithms/algorithms/prep/edit_distance.py" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
@@ -138,8 +186,8 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.knapsack">
-    <configuration name="binary_trees" type="PythonConfigurationType" factoryName="Python" temporary="true">
+  <component name="RunManager" selected="Python.equal_subset_sum">
+    <configuration name="edit_distance" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="algos-ivanwakeup" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -151,13 +199,13 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/algorithms/prep/binary_trees.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/algorithms/prep/edit_distance.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
     </configuration>
-    <configuration name="dp_cut_rods" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="equal_subset_sum" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="algos-ivanwakeup" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -169,7 +217,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/algorithms/prep/dp_cut_rods.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/algorithms/prep/equal_subset_sum.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -193,7 +241,7 @@
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
     </configuration>
-    <configuration name="linked_list" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="longest_common_subseq" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="algos-ivanwakeup" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -205,13 +253,13 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/algorithms/prep/linked_list.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/algorithms/prep/longest_common_subseq.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
     </configuration>
-    <configuration name="priority_queue" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="permutations" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="algos-ivanwakeup" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -219,30 +267,30 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/algorithms/prep" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/algorithms" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/algorithms/prep/priority_queue.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/algorithms/permutations.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
     </configuration>
     <list>
-      <item itemvalue="Python.priority_queue" />
-      <item itemvalue="Python.linked_list" />
-      <item itemvalue="Python.binary_trees" />
-      <item itemvalue="Python.dp_cut_rods" />
       <item itemvalue="Python.knapsack" />
+      <item itemvalue="Python.longest_common_subseq" />
+      <item itemvalue="Python.edit_distance" />
+      <item itemvalue="Python.equal_subset_sum" />
+      <item itemvalue="Python.permutations" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.equal_subset_sum" />
+        <item itemvalue="Python.permutations" />
         <item itemvalue="Python.knapsack" />
-        <item itemvalue="Python.binary_trees" />
-        <item itemvalue="Python.dp_cut_rods" />
-        <item itemvalue="Python.linked_list" />
-        <item itemvalue="Python.priority_queue" />
+        <item itemvalue="Python.edit_distance" />
+        <item itemvalue="Python.longest_common_subseq" />
       </list>
     </recent_temporary>
   </component>
@@ -266,11 +314,12 @@
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.22598253" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.32843652" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32948583" />
+      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.32843652" />
       <window_info anchor="bottom" id="Version Control" order="7" />
       <window_info anchor="bottom" id="Python Console" order="7" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info anchor="bottom" id="Terminal" order="7" visible="true" weight="0.32948583" />
+      <window_info anchor="bottom" id="Terminal" order="7" weight="0.32948583" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.37565583" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -287,7 +336,6 @@
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
-      <window_info anchor="bottom" id="Find" order="1" />
       <window_info anchor="bottom" id="Terminal" order="7" weight="0.32795697" />
       <window_info anchor="bottom" id="Python Console" order="7" />
     </layout>
@@ -349,11 +397,12 @@
           <option name="timeStamp" value="30" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/algorithms/prep/knapsack.py</url>
-          <option name="timeStamp" value="40" />
+          <url>file://$PROJECT_DIR$/algorithms/prep/equal_subset_sum.py</url>
+          <line>5</line>
+          <option name="timeStamp" value="54" />
         </line-breakpoint>
       </breakpoints>
-      <option name="time" value="42" />
+      <option name="time" value="55" />
     </breakpoint-manager>
     <watches-manager>
       <configuration name="PythonConfigurationType">
@@ -362,27 +411,6 @@
     </watches-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/algorithms/prep/leetcode46.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="16" column="17" selection-start-line="16" selection-start-column="17" selection-end-line="16" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/algorithms/prep/leetcode101.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="30">
-          <caret line="2" selection-start-line="2" selection-end-line="10" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/algorithms/binary_tree_bfs.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="795">
-          <caret line="53" selection-start-line="53" selection-end-line="56" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/algorithms/permutations.py">
       <provider selected="true" editor-type-id="text-editor">
         <state>
@@ -551,13 +579,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/algorithms/permutations.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="16" selection-start-line="16" selection-end-line="16" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/algorithms/dfs.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -661,17 +682,45 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/algorithms/prep/knapsack.py">
+    <entry file="file://$PROJECT_DIR$/algorithms/prep/longest_common_subseq.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="570">
-          <caret line="38" column="39" selection-start-line="38" selection-start-column="39" selection-end-line="38" selection-end-column="39" />
+        <state relative-caret-position="45">
+          <caret line="24" lean-forward="true" selection-start-line="24" selection-end-line="24" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/algorithms/prep/edit_distance.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="8" lean-forward="true" selection-start-line="8" selection-end-line="8" />
+        <state relative-caret-position="288">
+          <caret line="61" column="24" selection-start-line="61" selection-start-column="24" selection-end-line="61" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/algorithms/permutations.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="13" lean-forward="true" selection-start-line="13" selection-end-line="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/algorithms/prep/knapsack.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="465">
+          <caret line="76" column="34" lean-forward="true" selection-start-line="76" selection-start-column="34" selection-end-line="76" selection-end-column="34" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/algorithms/prep/longest_increasing_subseq.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="258">
+          <caret line="38" column="127" selection-start-line="38" selection-start-column="127" selection-end-line="38" selection-end-column="127" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/algorithms/prep/equal_subset_sum.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="16" selection-start-column="16" selection-end-column="16" />
         </state>
       </provider>
     </entry>

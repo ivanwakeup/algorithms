@@ -59,8 +59,43 @@ def print_matrix(matrix):
     lens = [max(map(len, col)) for col in zip(*s)]
     fmt = '\t'.join('{{:{}}}'.format(x) for x in lens)
     table = [fmt.format(*row) for row in s]
-    print '\n'.join(table)
+    print('\n'.join(table))
 
 
-print(isMatch("aa", "a*"))
-print(isMatchFails("aa", "a*"))
+# print(isMatch("aa", "a*"))
+# print(isMatchFails("aa", "a*"))
+
+
+'''
+recurrence:
+DP(i, j) = string from position I onwards matches pattern from position j onwards
+BASE CASE:
+if you have no pattern left, then the only match is if you have no string left
+if next character is a star, two possibilities:
+1. the current characters match AND the rest of the string matches the pattern
+2. the current characters dont match and the current string matches the pattern excluding p[i] and p[i+1] 
+= max {
+    DP(i+1, j+1) if s[i] == p[j]
+    
+}
+'''
+def naive_regex_matcher(s, p):
+
+    if not p:
+        return not s
+
+    if not s:
+        matches = False
+    else:
+        matches = (s[0] == p[0] or p[0] == '.')
+
+    if len(p) >= 2 and p[1] == "*":
+        cur_match = matches and naive_regex_matcher(s[1:], p)
+        cur_dont_match = naive_regex_matcher(s, p[2:])
+        result = max(cur_match, cur_dont_match)
+    else:
+        result = naive_regex_matcher(s[1:], p[1:])
+
+    return result
+
+print(naive_regex_matcher("a*", "aa"))

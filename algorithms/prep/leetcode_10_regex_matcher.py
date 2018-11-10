@@ -24,9 +24,7 @@ def isMatch(s, p):
     print_matrix(dp)
     return dp[pl][sl]
 
-'''
-OLD ATTEMPT!
-'''
+
 def isMatchFails(s, p):
     sl = len(s)
     pl = len(p)
@@ -65,136 +63,35 @@ def print_matrix(matrix):
 
 
 '''
-recursive regex matcher implementation:
-
-rules for matching:
-* - matches character preceeding 0 or more times
-. - matches any character
-char - matches literal character
-
-examples:
-
-a*
-aaa
-MATCHES
-
-a*b*cc*
-c
-MATCHES
-
-rules: if . or char[i] = pattern[i], match
-
-if str[i] != pattern[i] and pattern[i] != *, no match
-
-else if pattern is *
-
-str
-
-IF A STAR IS PRESENT IN THE P[1], YOU CAN EITHER PRETEND P[0:2] DOESN'T EXIST, OR YOU CAN DELETE THE CHARACTER S[0] AND CHECK THE REST OF THE STRING
-WHY IS THIS?
-
-CASES TO COVER:
-
-IF S[I] AND P[I] MATCH AND THERE IS NO STAR IN P[1], THEN JUST SEE IF S[I+1] AND P[I+1] MATCH
-IF STAR EXISTS:
-THEN MAX {
-    S[I] == P[I] AND MATCHES(S[I+1], P)
-    MATCHES(S, P[2:])
+recurrence:
+DP(i, j) = string from position I onwards matches pattern from position j onwards
+BASE CASE:
+if you have no pattern left, then the only match is if you have no string left
+if next character is a star, two possibilities:
+1. the current characters match AND the rest of the string matches the pattern
+2. the current characters dont match and the current string matches the pattern excluding p[i] and p[i+1] 
+= max {
+    DP(i+1, j+1) if s[i] == p[j]
+    
 }
 '''
-
-def naive_matcher(s, p):
-
-    if not p:
-        return not s
-
-    matches = s and (s[0] == p[0] or p[0] == ".")
-
-    if len(p) >= 2 and p[1] == "*":
-        #two cases if there is a * coming up. either the s[i] matches pattern[i] and
-        return (matches and naive_matcher(s[1:], p)) or naive_matcher(s, p[2:])
-    else:
-        return matches and naive_matcher(s[1:], p[1:])
-
-
-
-print(naive_matcher("adgahdahaadasgahdagdsveagrabsdbasdbadghasbhdsbasdgadss", "a*.bc*c*b*asdg*.a*a*b*c*......g*aadjadfm"))
-
-
-
-
-def naive_matcher_memoized(s, p, memo):
-
-    key = s + ":" + p
-    if key in memo:
-        return memo[key]
+def naive_regex_matcher(s, p):
 
     if not p:
         return not s
 
     if not s:
-        matches_here = False
+        matches = False
     else:
-        #there is at least 1 char in string and pattern
-        matches_here = (s[0] == p[0] or p[0] == ".")
+        matches = (s[0] == p[0] or p[0] == '.')
 
-    #if there is an upcoming *, either the s and the rest of the pattern without the star match
-    #or the rest of the string and theres a match on the current char AND the rest of the string matches
-    #the rest of the pattern
     if len(p) >= 2 and p[1] == "*":
-        matches_without = naive_matcher_memoized(s, p[2:], memo)
-        matches_with = (matches_here and naive_matcher_memoized(s[1:], p, memo))
-        result = max(matches_without, matches_with)
+        cur_match = matches and naive_regex_matcher(s[1:], p)
+        cur_dont_match = naive_regex_matcher(s, p[2:])
+        result = max(cur_match, cur_dont_match)
     else:
-        #if there is no upcoming *, the current chars have to match and the rest of the string and pattern have to match
-        result = matches_here and naive_matcher_memoized(s[1:], p[1:], memo)
-    memo[key] = result
+        result = naive_regex_matcher(s[1:], p[1:])
 
     return result
 
-print(naive_matcher_memoized("aabc", "a*.c*", {}))
-
-'''
-dp[i][j] = does s up to I match pattern up to J?
-'''
-def bottom_up_matcher(s, p):
-    pass
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+print(naive_regex_matcher("a*", "aa"))

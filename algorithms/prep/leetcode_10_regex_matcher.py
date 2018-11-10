@@ -20,10 +20,6 @@ def isMatch(s, p):
                 dp[i][j] = dp[i-2][j] or dp[i - 1][j]
                 if p[i - 2] == s[j - 1] or p[i - 2] == '.':
                     dp[i][j] |= dp[i][j - 1]
-            # if s[i - 1] == p[j - 1] or p[j - 1] == '.':
-            #     dp[i][j] = dp[i - 1][j - 1]
-            # elif p[j - 1] == '*':
-            #     dp[i][j] = dp[i][j - 2] or dp[i - 1][j]
 
     print_matrix(dp)
     return dp[pl][sl]

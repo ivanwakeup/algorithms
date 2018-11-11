@@ -17,7 +17,7 @@ VsubK(i, capacity) = max( VSubK(i-1, capacity-Wsubi), VSubK(i-1, capacity) ) FOR
 knapsack_size = 10
 
 weights = [3,7,5,2,1,1,6]
-items = [4,8,5,2,9,3,1]
+items =   [4,8,5,2,9,3,1]
 
 
 def knapsack(item_idx, capacity, memo):
@@ -36,7 +36,7 @@ def knapsack(item_idx, capacity, memo):
     return result
 
 
-# print(knapsack(len(weights)-1, 10, {}))
+print(knapsack(len(weights)-1, 10, {}))
 
 
 '''
@@ -55,26 +55,39 @@ DP(I, C) = max {
 }
 '''
 
-def maximize_knapsack_value(c):
-    weights = [5, 10, 3, 7, 4, 2, 1]
-    values = [8, 12, 1, 9, 4, 1, 0]
-    return do_maximize_knapsack(c, 0, weights, values)
 
-def do_maximize_knapsack(cap, i, weights, values):
 
-    if cap <= 0 or i < 0:
-        return 0
+'''bottom up knapsack implementation
 
-    #this wont work, need to check first if i can include the ith item before i recurse
-    included = 0
-    if cap - weights[i] >= 0:
-        included = values[i] + do_maximize_knapsack(cap-weights[i], i-1, weights, values)
-    not_included = do_maximize_knapsack(cap, i-1, weights, values)
-    result = max(included, not_included)
+1. represent values of the items on the rows, and weights of the items on the columns
+2. iterating right on the columns, if the total weight of the ith item is > the value, you can't include it
 
-    return result
+ROWS: represent items[:i+1] that we're considering including
+COLUMNS: represent the total capacity we have available in the knapsack
 
-print(maximize_knapsack_value(10))
+so, DP[i][j] says using items[:i+1], the max value we can achieve with J weight available is: ???
+
+'''
+
+def maximize_knapsack_bottom_up(capacity, values, weights):
+
+    dp = [[0 for _ in range(capacity+1)] for _ in range(len(weights)+1)]
+
+    #what is the max value i can have with items[:0] and 0 capacity?
+    dp[0][0] = 0
+
+    for i in range(1, len(weights)+1):
+        for j in range(1, capacity+1):
+            if weights[i-1] > j:
+                dp[i][j] = dp[i-1][j]
+            else:
+                dp[i][j] = max(dp[i-1][j], values[i-1]+dp[i-1][j-weights[i-1]])
+    return dp[-1][-1]
+
+
+print(maximize_knapsack_bottom_up(10, items, weights))
+
+
 
 
 

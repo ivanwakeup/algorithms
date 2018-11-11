@@ -95,3 +95,32 @@ def naive_regex_matcher(s, p):
     return result
 
 print(naive_regex_matcher("a*", "aa"))
+
+
+
+class Solution(object):
+    def isMatch(self, s, p):
+        sl = len(s)
+        pl = len(p)
+
+        dp = [[False for _ in range(sl + 1)] for _ in range(pl + 1)]
+
+        dp[0][0] = True
+
+        for i in range(1, pl + 1):
+            if p[i-1] == "*" and dp[i-2][0]:
+                dp[i][0] = True
+
+        for i in range(1, pl + 1):
+            for j in range(1, sl + 1):
+                if p[i-1] != "*":
+                    #no star, previous pattern and string match AND current string and pattern match
+                    dp[i][j] = dp[i-1][j-1] and (p[i - 1] == s[j - 1] or p[i - 1] == '.')
+                else:
+                    #is star, either pattern matches WITHOUT star and previous or the previous regex character matched the current
+                    dp[i][j] = dp[i-2][j] or dp[i - 1][j]
+                    #if we have a star and the previous part of the regex matched the current string, we STILL have a match
+                    if p[i - 2] == s[j - 1] or p[i - 2] == '.':
+                        dp[i][j] |= dp[i][j - 1]
+
+        return dp[pl][sl]

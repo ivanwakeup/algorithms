@@ -1,6 +1,11 @@
 data = [2,2,3,5]
 
-
+'''
+if total isn't even, we cant have two equal sum subsets
+otherwise treat this like a knapsack problem.
+at each level of recursion, you can either include the current element in your pursuit of the target sum, or not.
+you're just trying to find if ANY way exists to achieve your target sum.
+'''
 def equal_subset_sum(arr):
     total = sum(arr)
     if total % 2:

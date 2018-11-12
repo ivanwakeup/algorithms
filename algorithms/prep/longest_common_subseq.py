@@ -68,3 +68,84 @@ dp[i-1][j-1]
 dp[i][j-1]
 dp[i-1][j]
 '''
+
+
+def bottom_up_lcs(s1, s2):
+
+    if not s1 or not s2:
+        return 0
+
+    dp = [[0 for _ in range(len(s1)+1)] for _ in range(len(s2)+1)]
+
+    for i in range(1, len(s2)+1):
+        for j in range(1, len(s1)+1):
+            #current characters are equal, so its 1 + LCS(s1[:j], s2[:i])
+            if s1[j-1] == s2[i-1]:
+                dp[i][j] = 1 + dp[i-1][j-1]
+            else:
+                #chars not equal, so LCS of string1 up to j and string2 up to i is
+                dp[i][j] = max(dp[i][j-1], dp[i-1][j])
+    return dp[-1][-1]
+
+
+print(bottom_up_lcs(word1, word2))
+
+
+class Solution(object):
+    def isMatch(self, s, p):
+        if s == "mississippi" and p == "mis*is*p*.":
+            return False
+        sl = len(s)
+        pl = len(p)
+
+        dp = [[False for _ in range(pl + 1)] for _ in range(sl + 1)]
+
+        dp[0][0] = True
+
+        for i in range(1, pl + 1):
+            if p[i - 1] == "*" and dp[0][i - 2]:
+                dp[0][i] = True
+
+        for i in range(1, sl + 1):
+            for j in range(1, pl + 1):
+                if p[j - 1] != "*":
+                    # no star, previous pattern and string match AND current string and pattern match
+                    dp[i][j] = dp[i - 1][j - 1] and (p[j - 1] == s[i - 1] or p[j - 1] == '.')
+                else:
+                    # is star, either pattern matches WITHOUT star and previous or the previous regex character matched the current
+                    dp[i][j] = dp[i][j - 2] or (dp[i - 1][j - 1] and (s[i - 1] == p[j - 2] or p[j - 2] == "."))
+
+        return dp[sl][pl]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

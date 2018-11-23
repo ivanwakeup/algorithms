@@ -31,4 +31,14 @@ data = [1,6,11,5]
 print(all_subset_partitions(data))
 
 
+def gcd(a, b):
+    if a == 0 or b == 0:
+        return a or b
+    if a > b:
+        return gcd((a%b), b)
+    else:
+        return gcd((b%a), a)
+
+print(gcd(10, 6))
+
 

@@ -10,7 +10,8 @@ class Node:
         self.next = None
 
     def __repr__(self):
-        return "Node Value: {}".format(self.data)
+        return "Address {} and Node Value: {}".format(id(self), self.data)
+
 
 class DoublyNode:
 
@@ -41,7 +42,6 @@ class LinkedList:
             prev = cur
             cur = tmp
         self.head = prev
-
 
     def insertHead(self, node):
         tmp = self.head
@@ -89,26 +89,100 @@ class LinkedList:
             cur = cur.next
         str += "NIL"
         print(str)
-        return(str)
+
+    def swapPairs(self):
+        dummy = p = Node(0)
+        head = self.head
+        dummy.next = head
+        while head and head.next:
+            self.print_ll()
+            tmp = head.next
+            head.next = tmp.next
+            tmp.next = head
+            p.next = tmp
+            head = head.next
+            p = tmp.next
+        self.head = dummy.next
 
 
-ll = LinkedList()
-ll.insertHead(Node(1))
-ll.insertHead(Node(2))
-ll.insertHead(Node(3))
-ll.insertTail(Node(4))
-ll.insertHead(Node(5))
+# ll = LinkedList()
+# ll.insertHead(Node(4))
+# ll.insertHead(Node(3))
+# ll.insertHead(Node(2))
+# ll.insertHead(Node(1))
+#
+# ll.swapPairs()
+#
+# ll.print_ll()
+#
+# ll.search(3)
+# ll.search(-1)
+#
+# ll.delete(1)
+#
+# ll.reverse()
+# ll.print_ll()
+# ll.reverse()
+# ll.print_ll()
 
-ll.print_ll()
 
-ll.search(3)
-ll.search(-1)
+# def mergeTwoLists(l1, l2):
+#     dummy = curr = Node(0)
+#     while l1 and l2:
+#         if l1.data < l2.data:
+#             curr.next = l1
+#             l1 = l1.next
+#         else:
+#             curr.next = l2
+#             l2 = l2.next
+#         curr = curr.next
+#     curr.next = l1 or l2
+#     return dummy.next
+#
+#
+# l1 = Node(1)
+# l1.next = Node(1)
+# l1.next.next = Node(2)
+#
+# l2 = Node(2)
+# l2.next = Node(3)
+#
+#
+# out = mergeTwoLists(l1, l2)
 
-ll.delete(1)
 
-ll.reverse()
-ll.print_ll()
-ll.reverse()
-ll.print_ll()
+def reverseKGroup(head, k):
+    dummy = jump = Node(0)
+    dummy.next = l = r = head
+    while True:
+        count = 0
+        # only want to reverse the list if we still have list remaining once we get to k
+        while r and count < k:
+            r = r.next
+            count += 1
+        if count == k:
+            # does this cur, pre assignment work?
+            cur, pre = l, r
+            # now l is at head, r is at end of reversal range
+            for _ in range(k):
+                temp = cur.next
+                cur.next = pre
+                pre = cur
+                cur = temp
+            jump.next = pre
+            jump = l
+            l = r
+        else:
+            return dummy.next
+
+l1 = Node(1)
+l1.next = Node(2)
+l1.next.next = Node(3)
+l1.next.next.next = Node(4)
+l1.next.next.next.next = Node(5)
+
+
+
+print(reverseKGroup(l1, 2))
 
 

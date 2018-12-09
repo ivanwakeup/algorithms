@@ -41,6 +41,9 @@ class Vertex:
     def __str__(self):
         return "Vertex {} with Parent {} and Child {}".format(self.data, self.parent, self.child)
 
+    def __repr__(self):
+        return self.data
+
 # a = Vertex('A')
 # b = Vertex('B')
 # c = Vertex('C')
@@ -94,15 +97,15 @@ shoes = Vertex('shoes')
 watch = Vertex('watch')
 
 get_ready_dag = {
-    underwear: [pants, shoes],
-    pants: [belt, shoes],
-    belt: [jacket],
-    shirt: [belt, tie, jacket],
-    tie: [jacket],
-    jacket: [],
-    socks: [shoes],
-    shoes: [],
-    watch: []
+    underwear: {pants, shoes},
+    pants: {belt, shoes},
+    belt: {jacket},
+    shirt: {belt, tie, jacket},
+    tie: {jacket},
+    jacket: set(),
+    socks: {shoes},
+    shoes: set(),
+    watch: set()
 }
 
 def find_topo_order(dag):
@@ -125,11 +128,59 @@ def find_topo_order(dag):
         if v.data not in visited:
             dfs(v)
 
-find_topo_order(get_ready_dag)
-result = sorted([item for item in get_ready_dag.keys()], key=lambda x: x.finish, reverse=True)
-for item in result:
-    print(item.data)
+# find_topo_order(get_ready_dag)
+# result = sorted([item for item in get_ready_dag.keys()], key=lambda x: x.finish, reverse=True)
+# for item in result:
+#     print(item.data)
 
+
+def get_strongly_components(dag):
+    time = {'val': 0}
+
+    def dfs(n_dag, vertex, visited):
+        visited.add(vertex.data)
+        time['val'] += 1
+        vertex.begin = time['val']
+        for neighbor in n_dag[vertex]:
+            if neighbor.data not in visited:
+                dfs(n_dag, neighbor, visited)
+        time['val'] += 1
+        vertex.finish = time['val']
+
+    visited = set()
+    for v in dag.keys():
+        dfs(dag, v, visited)
+
+    for v in dag.keys():
+        print(v.data, v.begin, v.finish)
+
+    dag_transpose = transpose(dag)
+    sorted_keys = sorted([item for item in get_ready_dag.keys()], key=lambda x: x.finish, reverse=True)
+    visited = set()
+
+    print(dag)
+    print(dag_transpose)
+    for key in sorted_keys:
+        dfs(dag_transpose, key, visited)
+
+def transpose(dag):
+    new_dag = {}
+    for v in dag.keys():
+        for adj in dag[v]:
+            if adj in new_dag:
+                new_dag[adj].add(v)
+            else:
+                new_dag[adj] = {v}
+    for v in dag.keys():
+        if v not in new_dag:
+            new_dag[v] = set()
+
+    return new_dag
+
+# print(transpose(get_ready_dag))
+# print(get_ready_dag)
+
+get_strongly_components(get_ready_dag)
 
 
 

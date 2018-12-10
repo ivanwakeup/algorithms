@@ -71,17 +71,21 @@ def dijkstra_cost_source_to_target_only(node, target, graph):
     visited = set()
     node.distance = 0
     q.put((node.distance, node))
+    #path currently broken
+    path = []
     while not q.empty():
         dist, curr = q.get()
+        path.append(curr)
         if curr == target:
-            return dist
+            return dist, path
         for vertex, cost in graph[curr]:
             if cost + curr.distance < vertex.distance:
                 vertex.distance = cost + curr.distance
             if vertex not in visited:
                 q.put((vertex.distance, vertex))
         visited.add(curr)
-    return float('inf')
+
+    return float('inf'), []
 
 def dijkstra_source_to_all_verticies(node, graph):
     q = queue.PriorityQueue()
@@ -101,24 +105,30 @@ def dijkstra_source_to_all_verticies(node, graph):
             print("Shortest Path from {} to {} costs {}".format(node.data, key.data, key.distance))
 
 
+#NOT FINISHED YET
 def a_star(node, target, graph):
     q = queue.PriorityQueue()
     visited = set()
     node.distance = 0
     q.put((node.distance, node))
+    #could keep track of node path by adding each element i pop from the priority queue to a PATH array[]
     while not q.empty():
         dist, curr = q.get()
+        if curr == target:
+            return dist
         for vertex, cost in graph[curr]:
             if cost + curr.distance < vertex.distance:
                 vertex.distance = cost + curr.distance
             if vertex not in visited:
+                #would change the "priority" here to include the aStar cost heuristic
                 q.put((vertex.distance, vertex))
         visited.add(curr)
     for key in graph.keys():
         if key != node:
             print("Shortest Path from {} to {} costs {}".format(node.data, key.data, key.distance))
 
-#print(dijkstra_cost_source_to_target_only(A, C, graph))
+
+print(dijkstra_cost_source_to_target_only(A, C, graph))
 
 #dijkstra_source_to_all_verticies(A, graph)
 

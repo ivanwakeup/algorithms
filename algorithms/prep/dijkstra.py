@@ -1,75 +1,130 @@
-class GraphNode:
-
-    def __init__(self, key):
-        self.key = key
-        self.edges = set()
-
-    def add_edge(self, edge):
-        self.edges.add(edge)
-
-    def add_node_edge(self, node, weight):
-        edge = DirectedGraphEdge(self, node, weight)
-        self.edges.add(edge)
+'''
+will need graph with nodes and edges
+edges are directed and have weights associated with them
+how to represent graph?
+use dict with Vertex objects
+how is edge denoted?
+    1. adjacency set of tuples with (edge, cost)
+    2. Edge object with V1, V2, cost
 
 
-class DirectedGraphEdge:
+questions to answer:
+why doesn't dijkstras work on graphs with a cycle?
+'''
 
-    def __init__(self, parent, child, weight):
-        self.weight = weight
-        self.parent = parent
-        self.child = child
+class Vertex:
+
+    def __init__(self, data):
+        self.data = data
+        self.distance = float('inf')
+
+    def __str__(self):
+        return "Vertex {}".format(self.data)
+
+    def __repr__(self):
+        return self.data
+
+    def __eq__(self, other):
+        return self.data == other.data
+
+    def __hash__(self):
+        return ord(self.data)
 
     def __lt__(self, other):
-        return self.weight < other.weight
+        return ord(self.data) < ord(other.data)
 
 
-node1 = GraphNode('A')
-node2 = GraphNode('B')
-node3 = GraphNode('C')
-node4 = GraphNode('D')
-node5 = GraphNode('E')
-node6 = GraphNode('F')
-node7 = GraphNode('H')
+A = Vertex('A')
+B = Vertex('B')
+C = Vertex('C')
+D = Vertex('D')
+E = Vertex('E')
+F = Vertex('F')
 
-node1.add_node_edge(node2, 5)
-node1.add_node_edge(node3, 2)
-node2.add_node_edge(node6, 3)
-node3.add_node_edge(node5, 4)
-node3.add_node_edge(node4, 2)
-node4.add_node_edge(node5, 3)
-node4.add_node_edge(node6, 4)
-node5.add_node_edge(node7, 7)
-node6.add_node_edge(node7, 6)
+graph = {
+    A: {(E, 1), (C, 9)},
+    B: {(E, 3), (C, 10), (F, 45)},
+    C: {(D,4)},
+    D: {(A, 5)},
+    E: {(B, 3), (D, 2)},
+    F: set()
+}
+
+import queue
 
 '''
-use a priority queue which manages what nodes to visit based on their position in the queue. nodes with a lower edge cost
-come first in the priority queue
-termination: when target_node bubbles to the top of the priority queue
+return shortest cost path in GRAPH from NODE to TARGET
 
-observations:
-1. how to keep track of current cost of path?
+what does priority queue do here?
+keeps the next node i want to visit at the top of the queue
+
+pseudo:
+start at source node
+inspect neighbors, update their vertex.distance if its less than initial
+add each neighbor to priority queue (the "priority" is the distance)
+mark CURR node as visited
+visited top neighbor from priority queue
+if top neighbor is TARGET, stop....you've found the shortest cost path from source to target
+'''
+def dijkstra_cost_source_to_target_only(node, target, graph):
+    q = queue.PriorityQueue()
+    visited = set()
+    node.distance = 0
+    q.put((node.distance, node))
+    while not q.empty():
+        dist, curr = q.get()
+        if curr == target:
+            return dist
+        for vertex, cost in graph[curr]:
+            if cost + curr.distance < vertex.distance:
+                vertex.distance = cost + curr.distance
+            if vertex not in visited:
+                q.put((vertex.distance, vertex))
+        visited.add(curr)
+    return float('inf')
+
+def dijkstra_source_to_all_verticies(node, graph):
+    q = queue.PriorityQueue()
+    visited = set()
+    node.distance = 0
+    q.put((node.distance, node))
+    while not q.empty():
+        dist, curr = q.get()
+        for vertex, cost in graph[curr]:
+            if cost + curr.distance < vertex.distance:
+                vertex.distance = cost + curr.distance
+            if vertex not in visited:
+                q.put((vertex.distance, vertex))
+        visited.add(curr)
+    for key in graph.keys():
+        if key != node:
+            print("Shortest Path from {} to {} costs {}".format(node.data, key.data, key.distance))
+
+
+def a_star(node, target, graph):
+    q = queue.PriorityQueue()
+    visited = set()
+    node.distance = 0
+    q.put((node.distance, node))
+    while not q.empty():
+        dist, curr = q.get()
+        for vertex, cost in graph[curr]:
+            if cost + curr.distance < vertex.distance:
+                vertex.distance = cost + curr.distance
+            if vertex not in visited:
+                q.put((vertex.distance, vertex))
+        visited.add(curr)
+    for key in graph.keys():
+        if key != node:
+            print("Shortest Path from {} to {} costs {}".format(node.data, key.data, key.distance))
+
+#print(dijkstra_cost_source_to_target_only(A, C, graph))
+
+#dijkstra_source_to_all_verticies(A, graph)
+
+
+'''
+questions:
+1. why does dijkstras not work on graphs with negative edge weights?
 2. 
 '''
-import heapq
-def dijkstra_shortest_path(start_node, target_node):
-    cost = float('inf')
-    if not start_node or not target_node:
-        return cost
-    pq = [start_node.edges]
-    heapq.heapify(pq)
-    visited = {}
-    while pq:
-        edge = heapq.heappop(pq)
-        edges = edge.child.edges
-        local_cost = edge.weight
-        #need to update the cost to
-        visited[edge.child.key] = local_cost
-        for edge in edges:
-            if edge.child.key not in visited:
-                heapq.heappush(pq, edge)
-
-
-
-
-print(dijkstra_shortest_path(node1, node7))
-

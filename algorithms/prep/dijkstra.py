@@ -17,6 +17,7 @@ class Vertex:
     def __init__(self, data):
         self.data = data
         self.distance = float('inf')
+        self.parent = None
 
     def __str__(self):
         return "Vertex {}".format(self.data)
@@ -70,23 +71,34 @@ def dijkstra_cost_source_to_target_only(node, target, graph):
     q = queue.PriorityQueue()
     visited = set()
     node.distance = 0
+    node.parent = None
     q.put((node.distance, node))
     #path currently broken
-    path = []
     while not q.empty():
         dist, curr = q.get()
-        path.append(curr)
+        #keeps track of path from SOURCE to TARGET
         if curr == target:
+            path = []
+            while curr:
+                path.append(curr)
+                curr = curr.parent
+            path = path[::-1]
             return dist, path
+        #end keep track
         for vertex, cost in graph[curr]:
             if cost + curr.distance < vertex.distance:
                 vertex.distance = cost + curr.distance
             if vertex not in visited:
+                if not vertex.parent:
+                    vertex.parent = curr
                 q.put((vertex.distance, vertex))
         visited.add(curr)
 
     return float('inf'), []
 
+'''
+why is the runtime O(|E| + |V|log|V|) ?
+'''
 def dijkstra_source_to_all_verticies(node, graph):
     q = queue.PriorityQueue()
     visited = set()

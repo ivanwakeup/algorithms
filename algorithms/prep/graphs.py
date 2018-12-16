@@ -180,7 +180,7 @@ def transpose(dag):
 # print(transpose(get_ready_dag))
 # print(get_ready_dag)
 
-get_strongly_components(get_ready_dag)
+
 
 
 

@@ -87,4 +87,12 @@ def approximate_log_base_2(num):
         result += 1
     return result
 
-print(calc_log_base_2(45353))
+#print(approximate_log_base_2(45353))
+
+
+def is_even(num):
+    return True if not bool(num & 1) else False
+
+#print(is_even(2349283492))
+
+

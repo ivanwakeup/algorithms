@@ -182,5 +182,41 @@ def transpose(dag):
 
 
 
+def make_inf_adj(num_vertex):
+    return [[float('inf') for _ in range(num_vertex+1)] for _ in range(num_vertex+1)]
+
+graph = make_inf_adj(4)
+
+#(from, to, weight)
+edges = [(1, 3, -2), (2, 1, 4), (2, 3, 3), (3, 4, 2), (4, 2, -1)]
+
+def floyd_warshall(graph, edges):
+
+    for f, t, w in edges:
+        graph[f][t] = w
+
+    #distance between a node and itself is 0
+    for i in range(1, len(graph)):
+        graph[i][i] = 0
+
+    cardV = len(graph)
+
+    for k in range(1, cardV):
+        for i in range(1, cardV):
+            for j in range(1, cardV):
+                #if distance is greater, update it to the smaller value
+                if graph[i][j] > graph[i][k] + graph[k][j]:
+                    graph[i][j] = graph[i][k] + graph[k][j]
+
+    return graph
+
+
+result = floyd_warshall(graph, edges)
+for line in result:
+    print(line)
+
+
+
+
 
 

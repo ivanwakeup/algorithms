@@ -14,3 +14,16 @@ def permute(s):
 
 
 print(permute("this"))
+
+
+def calc_permutations(arr):
+    if not arr:
+        return 0
+    n = len(arr)
+    result = 1
+    while n > 1:
+        result *= n
+        n-=1
+    return result
+
+#print(calc_permutations([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]))

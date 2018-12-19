@@ -54,7 +54,7 @@ class Solution(object):
             return 0
 
         self.triangle = triangle
-        return self.mps(0, 0, 0, {})
+        return self.mps(0, 0, {})
 
     def mps(self, i, j, memo):
         key = (i, j)
@@ -68,8 +68,7 @@ class Solution(object):
 
         path_sum = self.triangle[i][j] + min(
             self.mps(i + 1, j, memo),
-            self.mps(i + 1, j + 1 memo)
-        )
+            self.mps(i + 1, j + 1, memo))
 
         memo[key] = path_sum
 
@@ -84,3 +83,8 @@ print(sol.minimumTotal([
    [6,5,7],
   [4,1,8,3]
 ]))
+
+
+'''
+{(3, 0): 15, (3, 1): 12, (2, 0): 12, (3, 2): 18, (2, 1): 12, (1, 0): 12, (3, 3): 16, (2, 2): 16, (1, 1): 12}
+'''

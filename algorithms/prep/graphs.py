@@ -190,6 +190,24 @@ graph = make_inf_adj(4)
 #(from, to, weight)
 edges = [(1, 3, -2), (2, 1, 4), (2, 3, 3), (3, 4, 2), (4, 2, -1)]
 
+
+'''
+why is this dynamic programming?
+
+because this solution is based on the recurrence:
+
+SP(i, j, k) = what is the shortest path from vertex i to vertex j that uses at most K other verticies as intermediary verticies?
+
+its either a path that USES k verticies, in which case, you can define this path as:
+
+SP(i, j, k) = SP(i, k, k-1) + SP(k, j, k-1)
+in other words, if we're adding the kth vertex as an intermediary vertex, its the same as the SP(i, k) PLUS the SP(k, j)
+
+OTHERWISE:
+
+the SP just remains SP(i, j, k) = SP(i, j, k-1)
+
+'''
 def floyd_warshall(graph, edges):
 
     for f, t, w in edges:
@@ -205,6 +223,8 @@ def floyd_warshall(graph, edges):
         for i in range(1, cardV):
             for j in range(1, cardV):
                 #if distance is greater, update it to the smaller value
+                #you're checking if the that goes through the kth node is smaller than the smallest known distance from i to j
+                #you'll never overwrite graph[i][i], because its already 0 cost for a node to itself
                 if graph[i][j] > graph[i][k] + graph[k][j]:
                     graph[i][j] = graph[i][k] + graph[k][j]
 

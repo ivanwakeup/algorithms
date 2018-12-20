@@ -17,7 +17,7 @@ def isSymmetric(root):
     queue = [root, root]
     while queue:
         node1 = queue.pop(0)
-        node2 = queue.pop(0)
+        node2 = queue.dequeue(0)
         if not node1 and not node2:
             continue
         if not node1 or not node2:

@@ -17,12 +17,12 @@ def has_dfs_path_r(start, end, stack, visited):
         return True
     if stack:
         visited.append(start)
-        to_visit = stack.pop(len(stack)-1)
+        to_visit = stack.dequeue(len(stack) - 1)
 
         for neighbor in graph[to_visit]:
             if neighbor not in visited:
                 stack.append(neighbor)
-        return has_dfs_path_r(stack.pop(len(stack)-1), end, stack, visited)
+        return has_dfs_path_r(stack.dequeue(len(stack) - 1), end, stack, visited)
 
     return False
 

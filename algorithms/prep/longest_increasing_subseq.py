@@ -10,8 +10,13 @@ def lis(arr):
 
 
 def do_lis_memoized(arr, prev, curpos, memo):
+
+    #REMEMBER, THEY KEY YOU USE IN YOUR MEMO HAS TO "DISTINCTLY" represent subproblems. I was trying to use only str(curpos)
+    #for the key here, but this produces the wrong answer because it will return a cached value regardless of
+    #if you have updated "PREV" in the previous call
     key = str(prev) + ":" + str(curpos)
     if key in memo:
+        print("returning key!")
         return memo[key]
 
     if curpos == len(arr):
@@ -27,7 +32,7 @@ def do_lis_memoized(arr, prev, curpos, memo):
     return result
 
 
-print(lis([1,2,3,4,5,6]))
+print(lis([10,9,2,5,3,7,101,18]))
 
 '''
 for each index i, calculating the longest possible subseq is:
@@ -56,5 +61,5 @@ def bottom_up_lis(arr):
     return result
 
 
-print(bottom_up_lis([10,9,12,1,6,5,3,8,9]))
+print(bottom_up_lis([10,9,2,5,3,7,101,18]))
 

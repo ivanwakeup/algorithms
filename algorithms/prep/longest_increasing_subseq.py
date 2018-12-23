@@ -16,7 +16,7 @@ def do_lis_memoized(arr, prev, curpos, memo):
     #if you have updated "PREV" in the previous call
     key = str(prev) + ":" + str(curpos)
     if key in memo:
-        print("returning key!")
+        #print("returning key!")
         return memo[key]
 
     if curpos == len(arr):
@@ -43,21 +43,19 @@ how do subproblems solve the larger problem?
 by storing DP[i], you're calculating the maximum possible LIS UP TO THAT POINT. so, to answer the original problem what you need to find is
 maximum of each of those subproblems! this is because for any given array, the maximum LIS may or may not include the ith value
 '''
-def bottom_up_lis(arr):
-    if not arr:
+def bottom_up_lis(nums):
+    if not nums:
         return 0
 
-    dp = [0 for _ in range(len(arr)+1)]
-    dp[0] = 1
-
+    dp = [1] * len(nums)
     result = 1
-    for i in range(1, len(arr)):
-        local = 0
-        for j in range(0, i):
-            if arr[j] < arr[i]:
-                local = max(local, dp[j])
-            dp[i] = local + 1
-            result = max(result, dp[i])
+    for i in range(1, len(nums)):
+        for j in range(i):
+            if nums[j] < nums[i]:
+                # LIS is at least 2
+                dp[i] = max(dp[i], dp[j] + 1)
+                result = max(result, dp[i])
+
     return result
 
 

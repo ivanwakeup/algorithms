@@ -20,5 +20,5 @@ class ChainedHashMap:
 
 
     def hash(self, value):
-
+        pass
 

@@ -49,9 +49,9 @@ def is_one_edit(s1, s2):
     diffs = 0
     while i < len(s1) and j < len(s2):
         if s1[i] != s2[j]:
+            diffs += 1
             if diffs > 1:
                 return False
-            diffs += 1
             #move the pointer in the longer string forward!
             if len(s1) == len(s2):
                 i+=1
@@ -66,7 +66,7 @@ def is_one_edit(s1, s2):
 
     return (diffs + (len(s1)-i) + (len(s2)-j) <= 1)
 
-print(is_one_edit("pale", "pales"))
+print(is_one_edit("apple", "aple"))
 
 '''
 what is runtime?

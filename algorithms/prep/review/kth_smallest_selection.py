@@ -10,7 +10,8 @@ inspect the index of P, if it equals K, then return arr[P], else search the left
 
 '''
 
-data = [45,91,11,5,5,6,1,90]
+data = [45,91,11,5,6,1,90]
+data = [1,5,6,11,45,90,91]
 
 #for partitioning, lets start by swapping the pivot with the last element
 #then, starting from the beginning, we can create two "windows" that contain elements less than

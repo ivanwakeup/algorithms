@@ -163,6 +163,7 @@ def get_strongly_components(dag):
     for key in sorted_keys:
         dfs(dag_transpose, key, visited)
 
+
 def transpose(dag):
     new_dag = {}
     for v in dag.keys():

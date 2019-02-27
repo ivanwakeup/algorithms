@@ -1,4 +1,5 @@
 '''
+<<<<<<< HEAD
 given a DAG representing tasks, find how long it will take to run them all
 
 some can run in parallel (given by the DAG), we basically need to find the longest path from vertex X to vertex Y (the end)
@@ -102,6 +103,5 @@ def shortest_path_in_dag(dag, nodes, target, negate=False):
     return target.distance
 
 print(shortest_path_in_dag(dag, topo_order, e, True))
-
 
 

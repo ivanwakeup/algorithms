@@ -16,7 +16,7 @@ class LRUCache:
 
     def __init__(self, size):
         self.hm = {}
-        self.used_queue = []
+        self.used = {}
         self.space = size
         self.time = 0
 
@@ -36,30 +36,29 @@ class LRUCache:
             self.update_time(key)
             return
         if self.space <= 0:
-            #we need to remove the LRU key from the hm
             lru = float('inf')
-            del_key = None
-            idx = None
-            for i in range(len(self.used_queue)):
-                if self.used_queue[i][1] < lru:
-                    lru = self.used_queue[i][1]
-                    del_key = self.used_queue[i][0]
-                    idx = i
-            del self.hm[del_key]
-            self.used_queue.pop(idx)
+            delkey = None
+            #should be able to do this part in constant time
+            for ukey in self.used.keys():
+                if self.used[ukey] < lru:
+                    lru = self.used[ukey]
+                    delkey = ukey
+            #end part
+            if delkey:
+                del self.hm[delkey]
+                del self.used[delkey]
             self.space+=1
             self.set(key, value)
         else:
             self.hm[key] = value
-            self.used_queue.append([key, self.time])
+            self.used[key] = self.time
             self.space -= 1
             self.time += 1
 
     def update_time(self, key):
-        for i in range(len(self.used_queue)):
-            if self.used_queue[i][0] == key:
-                self.used_queue[i][1] = self.time
-                self.time+=1
+        if key in self.used:
+            self.used[key] = self.time
+            self.time +=1
 
 
 

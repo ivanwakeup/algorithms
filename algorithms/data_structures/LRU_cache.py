@@ -31,6 +31,10 @@ class LRUCache:
             return -1
 
     def set(self, key, value):
+        if key in self.hm:
+            self.hm[key] = value
+            self.update_time(key)
+            return
         if self.space <= 0:
             #we need to remove the LRU key from the hm
             lru = float('inf')
@@ -61,9 +65,9 @@ class LRUCache:
 
 cache = LRUCache(2)
 
-cache.set(1, 10)
-cache.set(2, 20)
-cache.set(3, 30)
-cache.get(2)
-cache.set(4, 40)
-print(cache.get(4))
+cache.set(2, 1)
+cache.set(1, 1)
+cache.set(2,3)
+cache.set(4,1)
+print(cache.get(1))
+print(cache.get(2))

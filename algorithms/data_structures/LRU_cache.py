@@ -12,7 +12,7 @@ PUT and GET operations in constant time?
 '''
 
 
-class LRUCache:
+class LRUCache1:
 
     def __init__(self, size):
         self.hm = {}
@@ -61,12 +61,71 @@ class LRUCache:
             self.time +=1
 
 
+#
+# cache = LRUCache1(2)
+#
+# cache.set(2, 1)
+# cache.set(1, 1)
+# cache.set(2,3)
+# cache.set(4,1)
+# print(cache.get(1))
+# print(cache.get(2))
 
-cache = LRUCache(2)
 
-cache.set(2, 1)
-cache.set(1, 1)
-cache.set(2,3)
-cache.set(4,1)
-print(cache.get(1))
-print(cache.get(2))
+
+'''
+
+'''
+from algorithms.data_structures.linked_list import KVDoubleLinkedList, KVDoubleNode
+class LRUCacheDoubleLinked:
+
+
+    def __init__(self, size):
+        #hm maps keys to KvDoubleNode objects
+        self.hm = {}
+        self.ll = KVDoubleLinkedList()
+        self.size = size
+
+    '''
+    we are now using the linkedlist to keep track of when keys instead of incrementing a time variable
+    and iterating over an array to find the least used key when we need to evict it
+    
+    when we get a key, let's remove it from the linked list by manually deleting that node, and then append it to the end
+    '''
+    def get(self, key):
+        if key not in self.hm:
+            return -1
+        node = self.hm[key]
+        self.ll.delete_node(node)
+        self.ll.add_node(node)
+        return node.val
+
+    '''
+    here, if we're setting a key we first want to remove it from the hashmap and linkedlist if it exists already,
+    and then re-add it to the end of the ll.
+    
+    if the key doesn't exist but our capacity is full, we want to just remove the node at the head of our linkedlist
+    '''
+    def set(self, key, value):
+        if key in self.hm:
+            existing_node = self.hm[key]
+            self.ll.delete_node(existing_node)
+            del self.hm[key]
+
+        elif len(self.hm) >= self.size:
+            to_del = self.ll.head.next
+            self.ll.delete_node(to_del)
+            del self.hm[to_del.key]
+
+        node = KVDoubleNode(key, value)
+        self.ll.add_node(node)
+        self.hm[key] = node
+
+
+lru = LRUCacheDoubleLinked(2)
+lru.set(1,1)
+lru.set(2,2)
+lru.get(1)
+lru.set(3,3)
+print(lru.get(2))
+

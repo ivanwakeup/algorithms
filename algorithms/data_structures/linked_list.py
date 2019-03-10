@@ -7,6 +7,10 @@ class KVDoubleNode:
         self.prev = None
 
 
+
+'''
+in this implementation we maintain a dummy head and tail pointer
+'''
 class KVDoubleLinkedList:
 
     '''
@@ -31,6 +35,16 @@ class KVDoubleLinkedList:
         self.tail.prev = node
 
 
+    '''
+    get reference to prev node, its next now points to current nodes next
+    next nodes prev now points to prev node
+    '''
+    def delete_node(self, node):
+        pre = node.prev
+        nxt = node.next
+        pre.next = nxt
+        nxt.prev = pre
+
     def print_ll(self):
         print_arr = []
         start = self.head
@@ -44,10 +58,16 @@ class KVDoubleLinkedList:
         print("".join(print_arr))
 
 
-ll = KVDoubleLinkedList()
-ll.add_node(KVDoubleNode(1,1))
-ll.add_node(KVDoubleNode(2,2))
+one = KVDoubleNode(1,1)
+two = KVDoubleNode(2,2)
+three = KVDoubleNode(3, 3)
 
-ll.print_ll()
+ll = KVDoubleLinkedList()
+ll.add_node(one)
+ll.add_node(two)
+ll.delete_node(two)
+ll.add_node(three)
+
+#ll.print_ll()
 
 

@@ -63,10 +63,36 @@ class Trie:
 
 
 
-t = Trie()
-t.add_word("this")
-t.add_word("that")
-t.add_word("thisa")
-t.add_word("thisaa")
+# t = Trie()
+# t.add_word("this")
+# t.add_word("that")
+# t.add_word("thisa")
+# t.add_word("thisaa")
+#
+# print(t.has_word("thisaaa"))
 
-print(t.has_word("thisaaa"))
+
+'''
+a trie used to solve the "palindrome pairs" problem. in addition to storing an array of words
+as nested paths, we also store whether WORD(i, j) is a palindrome. that is, whether the word from index i to index j is palindromic
+
+this class should be initialized with an array of words to store in the trie.
+'''
+class PPTrie:
+
+    paths = {}
+
+    def __init__(self, input_words):
+        for idx, word in enumerate(input_words):
+            self.add_word(word, idx)
+
+    def add_word(self, word, idx):
+        pass
+
+    def is_palindrome(self, word, i, j):
+        while i < j:
+            if word[i] != word[j]:
+                return False
+            i+=1
+            j-=1
+        return True

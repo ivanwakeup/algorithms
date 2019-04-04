@@ -95,7 +95,7 @@ class MinHeap:
 
 
 
-data = [1,3,2,7,4,8]
+data = [1,2,3,7,4,8]
 mh = MinHeap(len(data)-1, data)
 
 

@@ -10,7 +10,7 @@ what is the maximum VALUE you can achieve by taking items in your knapsack?
 
 how does this exhibit:
 
-optimal substructure - we can use subproblems to get the answer to our main problem
+optimal substructure - an optimal solution to our problem involves an optimal solution to our subproblems
 
 let MV(tc, items) be the max value achieveable with a total capacity (tc) and items
 
@@ -21,3 +21,4 @@ MV(tc, items, values) = max {
 is this true?
 
 '''
+

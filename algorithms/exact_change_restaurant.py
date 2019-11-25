@@ -10,7 +10,7 @@ can we do this with dynamic programming?
 
 overlapping subproblems - ?
 
-optimal substructure - we can use the result of subproblem answers to find our main problem answer
+optimal substructure - an optimal solution to our problem involves an optimal solution to subproblems
     if we have TP left, and a static dictionary of items/prices, we know whether or not we can make any combinations
 
     in other words:
@@ -39,6 +39,9 @@ why isn't this dynamic programming?
 we could rephrase this question, perhaps, if we had an "enjoyment" factor associated with a food item
 and we were trying to maximize our enjoyment given a dict of food/prices. but then this really just becomes
 an example of knapsack again.
+
+one other way to say it here is that we DONT EXHIBIT OPTIMAL SUBSTRUCTURE. Why?
+because subproblems (the combinations we can achieve with a current "sack" and the dict of items)
 
 '''
 

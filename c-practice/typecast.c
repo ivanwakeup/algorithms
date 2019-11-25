@@ -16,4 +16,5 @@ int main(void) {
     printf("address p is : %p\n", &p);
     printf("address p is : %p\n", p+1);
     printf("address p is : %p\n", p+2);
+
 }

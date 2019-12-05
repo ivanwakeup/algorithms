@@ -29,8 +29,8 @@ def compute_ring_location(key):
     landing = hash(key)%len(conceptual_ring)
     while not conceptual_ring[landing]:
         landing=(landing+1)%len(conceptual_ring)
-    machine = conceptual_ring[landing]
-    machine.add_key(key)
+    mach = conceptual_ring[landing]
+    mach.add_key(key)
 
 
 '''

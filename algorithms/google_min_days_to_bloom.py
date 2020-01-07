@@ -23,18 +23,25 @@ def min_days_to_bloom(roses, k, n):
     days = [x for x in max_sliding_window(roses, k)]
 
     #ensure we only select the best indexes from windows that aren't overlapping.
-    #in other words, once we make our "best" bouquet we can't make another one from any flows in that window
-    tmp = []
-    for i in range(0, len(days), k):
-        tmp.append(days[i])
+    #we must keep track of both the item and the index to ensure its no overlap
+    #when does it no overlap? when the second index is at least k away from the first
 
+    from queue import PriorityQueue
+    pq = PriorityQueue()
+    for i in range(len(days)):
+        pq.put((days[i], [i, days[i]]))
 
-    import heapq
-    heapq.heapify(tmp)
-    res = float('-inf')
-    for _ in range(n):
-        res = max(res, heapq.heappop(tmp))
+    it = pq.get()[1][1]
+    res = it
+    valid = n - 1
+
+    while not pq.empty() and valid:
+        item = pq.get()
+        if abs(item[1][0]-k)<=0:
+            res = max(res, item[1][1])
+            valid-=1
     return res
+
 
 
 from collections import deque
@@ -53,7 +60,7 @@ def max_sliding_window(arr, k):
             res.append(arr[d[0]])
     return res
 
-roses = [1,2,4,9,3,3,1]
+roses = [5,1,1,1,2,3,2,1,1]
 k = 2
 n = 2
 print(min_days_to_bloom(roses, k, n))

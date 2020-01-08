@@ -82,18 +82,16 @@ e = UnionFindVertex('E')
 f = UnionFindVertex('F')
 
 elements = [a, b, c, d, e, f]
-#
-# edges = [
-#     (a, b),
-#     (b, d),
-#     (c, f),
-#     (f, e),
-#     (a, c),
-#     (e, d)
-# ]
+
+#e[0] = cost, e[1] = v1, e[2] = v2
 edges = [
-    (a, b),
-    (d, c)
+    [3, a, c],
+    [4, d, b],
+    [2, e, f],
+    [5, a, b],
+    [6, c, e],
+    [4, f, d],
+    [3, b, f]
 ]
 '''
 naive find, no path compression
@@ -107,8 +105,8 @@ def find(vertex):
     return prev
 
 def union(edge):
-    v1 = find(edge[0])
-    v2 = find(edge[1])
+    v1 = find(edge[1])
+    v2 = find(edge[2])
     if v1 == v2:
         return
     newsize = v1.size + v2.size
@@ -121,8 +119,13 @@ def union(edge):
     v1.size = newsize
     v2.size = newsize
 
-for e in edges:
-    if find(e[0]) != find(e[1]):
-        union(e)
+def kruskal_spanning_tree(edge_list):
+    list.sort(edge_list, key=lambda x: x[0])
+    spanning_edges = []
+    for e in edge_list:
+        if not find(e[1]) == find(e[2]):
+            union(e)
+            spanning_edges.append(e)
+    return spanning_edges
 
-print(find(edges[0][1]))
+print(kruskal_spanning_tree(edges))

@@ -1,3 +1,11 @@
+'''
+to implement a stack with a queue you could:
+1. append to queue on push operations
+2. any time you pop, popeverything from the queue (in FIFO order) and push them in reverse order into another queue
+3. then pop from the second queue
+
+
+'''
 class MyStack:
 
     def __init__(self):

@@ -80,6 +80,12 @@ this also holds true for something like a PriorityQueue. So, we can:
 2. keep a set to track what workers and bikes have been assigned. if we pop off the queue and worker and bike are already taken,
 skip em
 3. we are done once len(res) == len(workers)
+
+
+runtime analysis:
+0(n*m) to build the heap, need to construct each manhattan pair
+0(n*mlogm) to analyze heap and pick bikes
+0(nm) extra space
 '''
 from queue import PriorityQueue
 def campus_bikes(workers, bikes):

@@ -15,26 +15,42 @@ first, we need to create the graph!
 
 '''
 
+
+class ShortestPathVertex:
+
+    def __init__(self, r, c):
+        self.key = f"{str(r)}:{str(c)}"
+        self.min_cost = 0
+        self.neighbors = set()
+
+    def __hash__(self):
+        return hash(self.key)
+
+    def __repr__(self):
+        return self.key
+
 input = [
-    ["R", "R", "D"],
-    ["L", "L", "L"],
+    ["D", "U", "L"],
+    ["D", "L", "L"],
     ["U", "U", "R"]
 ]
 
 
 from collections import defaultdict
 def create_graph(matrix):
-    g = defaultdict(set)
+    graph = {}
     for r in range(len(matrix)):
         for c in range(len(matrix[0])):
-            key = f"{str(r)}:{str(c)}"
+            v = ShortestPathVertex(r, c)
+            graph[v.key] = v
             neighs = get_neighbors(matrix, r, c)
             for neigh in neighs:
+                nv = ShortestPathVertex(neigh[1], neigh[2])
                 if neigh[0] == matrix[r][c]:
-                    g[key].add((0, neigh[1], neigh[2]))
+                    v.neighbors.add((0, nv))
                 else:
-                    g[key].add((1, neigh[1], neigh[2]))
-    return g
+                    v.neighbors.add((1, nv))
+    return graph
 
 
 def get_neighbors(matrix, r, c):
@@ -50,28 +66,25 @@ def inbounds(r, c, matrix):
 
 g = create_graph(input)
 
-from collections import deque
 
-def zero_one_bfs(graph, target):
-    start = "0:0"
+from collections import deque
+def zero_one_bfs(graph, start, target):
     q = deque()
     q.append((0,start))
     visited = {start}
-    total = 0
     while q:
         cost, node = q.pop()
-        if node == target:
-            return total
-        total+=cost
-        for neigh in graph[node]:
-            neigh_key = f"{neigh[1]}:{neigh[2]}"
-            if neigh_key not in visited:
-                if neigh[0] == 0:
-                    q.append((0, neigh_key))
+        if node.key == target:
+            return node.min_cost
+        for cost, neigh in graph[node.key].neighbors:
+            neigh.min_cost = cost + node.min_cost
+            if neigh.key not in visited:
+                if cost == 0:
+                    q.append((0, neigh))
                 else:
-                    q.appendleft((1, neigh_key))
-                visited.add(neigh_key)
-    return total
+                    q.appendleft((1, neigh))
+                visited.add(neigh.key)
+    return -1
 
 
-print(zero_one_bfs(g, "2:2"))
+print(zero_one_bfs(g, g["0:0"], "2:2"))

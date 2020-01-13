@@ -13,7 +13,20 @@ I want to see how other people solve this problem, I will reveal the answer late
 
 first, we need to create the graph!
 
+
+what IS the thought process here?
+first, it's recognizing that we can encode a move from one cell to another with a 0 or 1.
+either we can make the move for free (corresponding to a 0 move) or we have to change the direction of our current cell
+to make it! (corresponding to a 1)
+
+obviously, we need the knowledge of a 0-1 BFS to solve it. why does a 0-1 bfs work?
+
+because this algorithm works like djikstras algorithm in that:
+1. the next item we pop is ALWAYS the shortest path TO THAT ITEM
+
 '''
+
+from collections import deque
 
 
 class ShortestPathVertex:
@@ -29,14 +42,7 @@ class ShortestPathVertex:
     def __repr__(self):
         return self.key
 
-input = [
-    ["D", "U", "L"],
-    ["D", "L", "L"],
-    ["U", "U", "R"]
-]
 
-
-from collections import defaultdict
 def create_graph(matrix):
     graph = {}
     for r in range(len(matrix)):
@@ -54,20 +60,17 @@ def create_graph(matrix):
 
 
 def get_neighbors(matrix, r, c):
-    neighs = set()
+
+    def inbounds(r, c, matrix):
+        return 0 <= r < len(matrix) and 0 <= c <= len(matrix[0])
+
+    neighs = []
     for item in (("D", r+1, c), ("R", r, c+1), ("U", r-1, c), ("L", r, c-1)):
         if inbounds(item[1], item[2], matrix):
-            neighs.add(item)
-    return list(neighs)
-
-def inbounds(r, c, matrix):
-    return r>=0 and c >=0 and r < len(matrix) and c < len(matrix[0])
+            neighs.append(item)
+    return neighs
 
 
-g = create_graph(input)
-
-
-from collections import deque
 def zero_one_bfs(graph, start, target):
     q = deque()
     q.append((0,start))
@@ -86,5 +89,12 @@ def zero_one_bfs(graph, start, target):
                 visited.add(neigh.key)
     return -1
 
+
+input = [
+    ["D", "U", "L"],
+    ["D", "L", "L"],
+    ["U", "U", "R"]
+]
+g = create_graph(input)
 
 print(zero_one_bfs(g, g["0:0"], "2:2"))

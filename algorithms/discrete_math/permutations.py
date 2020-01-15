@@ -16,7 +16,7 @@ def permute(s):
 print(permute("this"))
 
 
-def calc_permutations(arr):
+def compute_num_permutations_by_factorial(arr):
     if not arr:
         return 0
     n = len(arr)
@@ -26,4 +26,4 @@ def calc_permutations(arr):
         n-=1
     return result
 
-#print(calc_permutations([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]))
+print(compute_num_permutations_by_factorial([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]))

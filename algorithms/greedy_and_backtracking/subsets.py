@@ -40,4 +40,22 @@ data = [
   [1,2],
   []
 ]
-print(subsets([1,2,3]))
+#print(subsets([1,2,3]))
+
+
+'''
+we can also define this recursively
+'''
+
+def subsets_recursive(nums):
+    result = []
+    def dfs(path, nums):
+        result.append(path)
+        if not nums:
+            return
+        for i, num in enumerate(nums):
+            dfs(path+[num], nums[i+1:])
+    dfs([], nums)
+    return result
+
+print(subsets_recursive([1,2,3]))

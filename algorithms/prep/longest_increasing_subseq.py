@@ -41,7 +41,7 @@ result = max(DP[i] for all i)
 
 how do subproblems solve the larger problem?
 by storing DP[i], you're calculating the maximum possible LIS UP TO THAT POINT. so, to answer the original problem what you need to find is
-maximum of each of those subproblems! this is because for any given array, the maximum LIS may or may not include the ith value
+maximum of each of those subproblems! this is because for any given arrays_and_strings, the maximum LIS may or may not include the ith value
 '''
 def bottom_up_lis(nums):
     if not nums:

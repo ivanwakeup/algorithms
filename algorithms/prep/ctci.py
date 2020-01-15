@@ -34,8 +34,8 @@ def is_permutation(s1, s2):
 #print(is_permutation("tffhigfsgf", "shitffgff"))
 
 
-#a bit vector is basically an array of True/False. Don't get hung up on the int value of CHECKER here
-#what we care about is the binary representation of checker (in other words, the array of bits that is has)
+#a bit vector is basically an arrays_and_strings of True/False. Don't get hung up on the int value of CHECKER here
+#what we care about is the binary representation of checker (in other words, the arrays_and_strings of bits that is has)
 #this algorithm works by setting bits with: checker |= (1 << val). this has the effect of setting the 'val'th bit to 1
 def is_unique_bit_vector(s):
     checker = 0

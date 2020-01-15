@@ -88,7 +88,7 @@ class LRUCacheDoubleLinked:
 
     '''
     we are now using the linkedlist to keep track of when keys instead of incrementing a time variable
-    and iterating over an array to find the least used key when we need to evict it
+    and iterating over an arrays_and_strings to find the least used key when we need to evict it
     
     when we get a key, let's remove it from the linked list by manually deleting that node, and then append it to the end
     '''

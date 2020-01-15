@@ -6,7 +6,7 @@ max-heapify - start from root, let value "float down" by recursively calling max
 get-left-node
 get-right-node
 insert?
-you can make a heap from an array by calling max-heapify for each element [0....n//2]
+you can make a heap from an arrays_and_strings by calling max-heapify for each element [0....n//2]
 
 
 heap operations needed for priority queue:
@@ -61,7 +61,7 @@ class MaxPriorityQueue:
         self.heapify(0)
         return max
 
-    #the pos signifies the rank within the queue of the element. with this array-based implementation,
+    #the pos signifies the rank within the queue of the element. with this arrays_and_strings-based implementation,
     #we first check to make sure the pos we increase isn't already higher
     #then, we set the pos to new key and "float up" via the parent until the parent is greater than the key we inserting (its now a valid max heap at that point)
     def promote(self, pos, key):

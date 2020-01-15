@@ -42,7 +42,7 @@ def compress(chars):
             j += 1
         #j will move forward, so make sure to update the current char under consideration
         chars[i] = char
-        # i've hit a new char or the end of the array or both
+        # i've hit a new char or the end of the arrays_and_strings or both
         if local > 1:
             local = str(local)
             # handle local count having more than 1 digitg

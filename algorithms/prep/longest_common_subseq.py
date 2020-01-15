@@ -63,7 +63,7 @@ def bottom_up_lcs(word1, word2):
 
 
 '''
-you could save even more space on LCS by only storing the 3 previous values you care about in the DP array:
+you could save even more space on LCS by only storing the 3 previous values you care about in the DP arrays_and_strings:
 dp[i-1][j-1]
 dp[i][j-1]
 dp[i-1][j]

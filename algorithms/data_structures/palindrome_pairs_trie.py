@@ -73,10 +73,10 @@ class Trie:
 
 
 '''
-a trie used to solve the "palindrome pairs" problem. in addition to storing an array of words
+a trie used to solve the "palindrome pairs" problem. in addition to storing an arrays_and_strings of words
 as nested paths, we also store whether WORD(i, j) is a palindrome. that is, whether the word from index i to index j is palindromic
 
-this class should be initialized with an array of words to store in the trie.
+this class should be initialized with an arrays_and_strings of words to store in the trie.
 '''
 from collections import defaultdict
 class PPTrie:

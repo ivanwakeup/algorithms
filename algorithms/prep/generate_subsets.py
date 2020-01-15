@@ -25,7 +25,7 @@ def get_subsets(arr):
 
 
 '''
-num_subsets(arr, i) = num subsets of some array from position i
+num_subsets(arr, i) = num subsets of some arrays_and_strings from position i
 
 num_subsets(arr, i) = num_subsets(arr, i+1)
 '''

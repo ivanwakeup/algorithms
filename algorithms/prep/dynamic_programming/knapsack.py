@@ -51,14 +51,14 @@ two cases:
     - don't include, so MV is just MV(without_cur_item)
     
 how do we encode which value we're considering?
-keep track of J, the element in the array to include or not 
+keep track of J, the element in the arrays_and_strings to include or not 
 
 
 
 how can we memoize? this is the DP part.
 
 we use the index i and the capacity left remaining to memoize the solution. why?
-because we are considering elements from i onwards in the array.
+because we are considering elements from i onwards in the arrays_and_strings.
 
 the fact that we don't know if the current element should be in the result or not is what gives us OVERLAPPING SUBPROBLEMS.
 
@@ -140,7 +140,7 @@ MV(weights, items, i, cap) = max {
 } for all i
 
 
-start from the beginning of the array and ask the same questions:
+start from the beginning of the arrays_and_strings and ask the same questions:
 1. what is the MV by including item[i]?
 2. what is the MV by not including it?
 

@@ -1,11 +1,11 @@
 '''
 generally what we want to do is:
 let K be the Kth smallest element to select
-assume an unsorted array input
+assume an unsorted arrays_and_strings input
 
 procedure:
-select a pivot in the array, P
-partition the array such that all elements smaller than P appear to the left and all elements larger appear to the right
+select a pivot in the arrays_and_strings, P
+partition the arrays_and_strings such that all elements smaller than P appear to the left and all elements larger appear to the right
 inspect the index of P, if it equals K, then return arr[P], else search the left half if  K < P, or right half if P > K
 
 '''
@@ -32,7 +32,7 @@ def partition(arr, piv_idx):
     return i+1
 
 import random
-#recursively split the search space by only examing the appropriate part of the array
+#recursively split the search space by only examing the appropriate part of the arrays_and_strings
 def kth_smallest(arr, k):
     q = k - 1
     if len(arr) == 1:

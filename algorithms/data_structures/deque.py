@@ -12,7 +12,7 @@ it should support:
 approach:
 two arrays?
 
-use statically sized array, and start appending at the middle
+use statically sized arrays_and_strings, and start appending at the middle
 keep pointers to determine where pops and pushes should happen:
     can we do it with just 2 pointers?
 
@@ -25,7 +25,7 @@ pop - moves RP left
 
 if we run out of size on either the right or the left, add some size to that side
 
-if we add size to the beginning of the array, we need to update the lp pointer to where it belongs:
+if we add size to the beginning of the arrays_and_strings, we need to update the lp pointer to where it belongs:
     1. cur_idx + size_added
     2.
 '''

@@ -74,7 +74,7 @@ def num_ways(n, memo):
 '''
 can solve iteratively?
 
-#store the num ways for prev results in an array
+#store the num ways for prev results in an arrays_and_strings
 dp[i] = num ways to take i steps
 
 dp[0] = 1

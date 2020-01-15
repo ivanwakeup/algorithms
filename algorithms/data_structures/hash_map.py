@@ -15,7 +15,7 @@ mod that hash value by
 
 
 considerations:
-when do we increase the size of the array storing the values?
+when do we increase the size of the arrays_and_strings storing the values?
 we could do it every time the occupied space > half the total space
 
 the probability of a hash collision is about 50% when the table is half full

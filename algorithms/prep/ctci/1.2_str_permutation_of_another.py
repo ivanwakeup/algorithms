@@ -11,7 +11,7 @@ approaches:
 sort both strings, ensure characters appear at the same indicies (overal nlogn)
 add str1 and character counts to hashmap, iterate over second string and subtract char coutns from hashmap, ensure all coutns are 0 at the end. (space complexity = 0(n)) linear time
 
-use simple array of 26 characters (should we assume only alphabetic chars? maybe input is everything in ASCII range? at the end, check that array has no 1 values!
+use simple arrays_and_strings of 26 characters (should we assume only alphabetic chars? maybe input is everything in ASCII range? at the end, check that arrays_and_strings has no 1 values!
 '''
 
 def is_permutation(s1, s2):

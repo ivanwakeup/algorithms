@@ -1,15 +1,15 @@
 '''
-lets implement a queue with an array.
+lets implement a queue with an arrays_and_strings.
 
 
 [1,2,3,4,5] -> append on the left side, pop on the right?
-we could initialize an empty array and double it in size every time the queue grows.
+we could initialize an empty arrays_and_strings and double it in size every time the queue grows.
 [null, null, 1]
         ^
 [3,2,1]
  ^
 
-array full, so add some slots
+arrays_and_strings full, so add some slots
 [null,null,null,3,2,1]
              ^
 now pop() -> return 1, space becomes null
@@ -18,8 +18,8 @@ now pop() -> return 1, space becomes null
              ^     ^
 
 
-as we pop from the right, how do we reclaim the array slots that are now NULL?
-keep track of the array size, and let it be circular
+as we pop from the right, how do we reclaim the arrays_and_strings slots that are now NULL?
+keep track of the arrays_and_strings size, and let it be circular
 
 keep a pop and a push pointer that says where to pop and push from, both move to the left
 

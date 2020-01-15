@@ -1,5 +1,5 @@
 '''
-Minimal Tree: Given a sorted (increasing order) array with unique integer elements, write an algo­
+Minimal Tree: Given a sorted (increasing order) arrays_and_strings with unique integer elements, write an algo­
 rithm to create a binary search tree with minimal height.
 Hints: #79, #73, #7 76
 '''

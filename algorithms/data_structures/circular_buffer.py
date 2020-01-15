@@ -1,7 +1,7 @@
 '''
 a circular buffer is:
 
-a fixed size array that "evicts" keys when it is filled.
+a fixed size arrays_and_strings that "evicts" keys when it is filled.
 
 we can "append" keys to the current position in the buffer, if it is not full. if it is, we need to evict the "LRU" key
 
@@ -30,7 +30,7 @@ class CircularBuffer:
             print("buffer full, discarding {}".format(item))
             return
         self.buffer[self.end] = item
-        #reassign self.tail, wrap it around if outside array
+        #reassign self.tail, wrap it around if outside arrays_and_strings
         self.end = (1 + self.end) % len(self.buffer)
 
     def pop(self):

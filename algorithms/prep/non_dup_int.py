@@ -1,5 +1,5 @@
 '''
-given an array where every int appears 3 times except for 1, return that 1 number
+given an arrays_and_strings where every int appears 3 times except for 1, return that 1 number
 in linear time and constant space
 
 [6,1,3,3,3,6,6,9,9,9]
@@ -7,7 +7,7 @@ result = 1
 
 constant space = no hash map
 
-could maybe do multiple passes on the array
+could maybe do multiple passes on the arrays_and_strings
 we don't know if its the smallest/largest element that will appear
 
 could use a bit vector maybe?
@@ -23,7 +23,7 @@ approach:
 '''
 
 def find_non_dup(arr):
-    #we can only have a single non dup element if the size of the array is 3n + 1
+    #we can only have a single non dup element if the size of the arrays_and_strings is 3n + 1
     if (len(arr)-1)%3 != 0:
         return -1
     ones = 0

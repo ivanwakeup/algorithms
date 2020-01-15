@@ -8,7 +8,7 @@ restate problem:
 we have a robot at a starting position in a matrix, and we need to find him a path to the end
 
 ideas:
-we could use a DFS to find a path, just checking boundaries along the way (We keep track of the  current path with an array)
+we could use a DFS to find a path, just checking boundaries along the way (We keep track of the  current path with an arrays_and_strings)
 DFS would check almost every cell in the worst case, r*c complexity
 
 there might be multiple valid paths?

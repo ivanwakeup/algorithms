@@ -1,6 +1,6 @@
 '''
-implement a hash map with an array
-need hashing function? takes key that and stores the value at the position in array computed by the hash function
+implement a hash map with an arrays_and_strings
+need hashing function? takes key that and stores the value at the position in arrays_and_strings computed by the hash function
 stores
 '''
 class HashMap:

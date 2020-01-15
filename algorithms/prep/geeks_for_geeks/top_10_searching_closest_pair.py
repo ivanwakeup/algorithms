@@ -1,5 +1,5 @@
 '''
-Given a sorted array and a number x, find a pair in array whose sum is closest to x.
+Given a sorted arrays_and_strings and a number x, find a pair in arrays_and_strings whose sum is closest to x.
 Examples:
 
 Input: arr[] = {10, 22, 28, 29, 30, 40}, x = 54
@@ -30,12 +30,12 @@ return any ans
 
 observations:
 if found a pair that == x, return that pair
-otherwise we will need to look at the whole array?
+otherwise we will need to look at the whole arrays_and_strings?
 
 
-could just look at every pair in the array, and keep track of the pair and their distance from x, updating the minimum distance along the way
+could just look at every pair in the arrays_and_strings, and keep track of the pair and their distance from x, updating the minimum distance along the way
 
-the array is sorted, so could also start from each end and just iterate inwards?
+the arrays_and_strings is sorted, so could also start from each end and just iterate inwards?
 
 approach:
 start at each end

@@ -1,7 +1,7 @@
 '''
 what should i be able to do with a min heap?
 
-heapify an array
+heapify an arrays_and_strings
 '''
 
 class MinHeap:
@@ -18,7 +18,7 @@ class MinHeap:
         return arr
 
     '''
-    returns the top element of the min heap. also re-heapifys the array
+    returns the top element of the min heap. also re-heapifys the arrays_and_strings
     '''
     def pop(self):
         pass

@@ -47,7 +47,7 @@ class Solution:
             board[i][j] = -1
 
             # big optimization by chaining the ORs. might substantially reduce the amount of DFSs
-            # vs always performing all dfs's
+            # vs always performing all dfs's, if we find a true result early
             res = dfs(board, i, j - 1, k + 1) \
                   or dfs(board, i, j + 1, k + 1) \
                   or dfs(board, i + 1, j, k + 1) \

@@ -41,7 +41,7 @@ def quadratic_is_searchable(arr):
     return res
 
 
-print(quadratic_is_searchable([2,1,3,4,6,5]))
+#print(quadratic_is_searchable([2,1,3,4,6,5]))
 
 
 '''
@@ -59,6 +59,14 @@ def is_searchable_linear(arr):
     lt = [float('inf')] * len(arr)
     gt = [float('-inf')] * len(arr)
     res = 0
+    for i in range(len(arr)-2,-1,-1):
+        lt[i] = min(lt[i+1], arr[i+1])
     for i in range(1, len(arr)):
-        lt[len(arr)-1-i] = min(lt[arr])
+        gt[i] = max(gt[i-1], arr[i-1])
+
     for i, n in enumerate(arr):
+        if gt[i] < n < lt[i]:
+            res+=1
+    return res
+
+print(is_searchable_linear([1, 3, 2, 4, 5, 7, 6, 8]))

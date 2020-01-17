@@ -1,7 +1,7 @@
 # DFS recursively
 def subsets1(nums):
     res = []
-    dfs(sorted(nums), 0, [], res)
+    dfs(nums, 0, [], res)
     return res
 
 
@@ -12,4 +12,4 @@ def dfs(nums, index, current, res):
         dfs(nums, i + 1, next, res)
 
 
-print(subsets1([1,2,3]))
+print(subsets1([2,1,3]))

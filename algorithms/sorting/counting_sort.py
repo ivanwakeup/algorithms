@@ -14,6 +14,8 @@ we use this aux array to store the number of occurences of value i at the array 
 once we have this array, we compute the prefix-sum of this array: HERES THE MAGIC, this prefix sum tells us the starting
 position of the corresponding number in the output!
 
+note: to get the starting position of any given num I, look at aux[i-1]. This is because the prefix-sum array tells us the starting
+offset for the next number in the array.
 '''
 
 def counting_sort(arr):
@@ -21,7 +23,7 @@ def counting_sort(arr):
     aux = [0 for _ in range(largest + 1)]
 
     for num in arr:
-        aux[num] = aux[num] + 1
+        aux[num]+=1
 
     for j in range(1, len(aux)):
         aux[j] = aux[j-1] + aux[j]

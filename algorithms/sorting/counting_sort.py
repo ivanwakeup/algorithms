@@ -28,7 +28,7 @@ def counting_sort(arr):
     for j in range(1, len(aux)):
         aux[j] = aux[j-1] + aux[j]
 
-    result = [float('-inf') for _ in range(len(arr))]
+    result = [float('-inf') for _ in arr]
     for num in arr:
         cnt = aux[num-1]
         result[cnt] = num

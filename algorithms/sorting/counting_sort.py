@@ -18,6 +18,7 @@ note: to get the starting position of any given num I, look at aux[i-1]. This is
 offset for the next number in the array.
 '''
 
+
 def counting_sort(arr):
     largest = max(arr)
     aux = [0 for _ in range(largest + 1)]

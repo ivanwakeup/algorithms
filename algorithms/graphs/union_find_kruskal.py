@@ -64,7 +64,13 @@ def print_graph_dfs(g):
 
 
 '''
+kruskals algorithm effectively works as follows:
 
+we use a union-find structure to make sure we don't include nodes that would form a CYCLE in the minimum spanning tree
+    - if a new edge that we're considering adding is part if an existing set in union-find, we discard it
+
+we process the nodes in sorted order by edge cost, this will lead us to the minimum spanning tree
+    - this also ensures we don't pick higher cost edges that would create a cycle 
 '''
 
 class UnionFindVertex(Vertex):
@@ -103,6 +109,20 @@ def find(vertex):
         prev = res
         res = res.parent
     return prev
+
+
+'''
+if we update the parent pointers when we find a vertex
+'''
+def find_with_path_compression(vertex):
+    prev = vertex
+    while vertex.parent:
+        prev = vertex
+        vertex = vertex.parent
+        if vertex.parent:
+            prev.parent = vertex.parent
+    return prev
+
 
 def union(edge):
     v1 = find(edge[1])

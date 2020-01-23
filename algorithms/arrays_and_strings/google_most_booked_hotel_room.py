@@ -51,16 +51,12 @@ def most_booked_room(rooms):
         if hm[key] > res:
             rkey = key
             res = hm[key]
-        elif hm[key] == res:
-            if key < rkey:
-                rkey = key
-                res = hm[key]
+        elif hm[key] == res and key<rkey:
+            rkey = key
+            res = hm[key]
     return rkey
 
 data = ["+1A", "+3E", "-1A", "+4F", "+1A", "-3E", "+3E", "-3E", "+3E"]
-data.sort()
-#print(data)
-#print(most_booked_room(["+1A", "+3E", "-1A", "+4F", "+1A", "-3E", "+3E", "-3E", "+3E"]))
 
 
 def most_booked_sorted_approach(rooms):

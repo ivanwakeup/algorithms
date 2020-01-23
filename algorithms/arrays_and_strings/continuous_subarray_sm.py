@@ -38,5 +38,5 @@ class Solution:
 
 
 '''
-
+don't have a better solution yet.
 '''

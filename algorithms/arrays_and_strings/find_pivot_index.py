@@ -70,6 +70,10 @@ optimized constant space linear time approach.
 
 this is where we use the idea of just a single variable to store the current right_sum and left_sum
 
+
+you can sort of imagine a "slider" that moves across the array, and as it does, it reduces the size of the right_side array (and therby the right_sum)
+and increases the size of the left_side_array, and also the left_sum
+
 '''
 
 class Solution:

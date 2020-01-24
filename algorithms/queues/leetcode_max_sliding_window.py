@@ -18,6 +18,25 @@ what is the current window? i-k+1
 
 INTUITIONS:
 1. the deque helps us maintain a data structure that can remove and add items from BOTH ends in constant time.
+
+
+
+SECOND TIME SOLVING:
+the brute force is to consider all windows of size k and compute their max
+this runtime is O(nk)
+
+how can we optimize it?
+
+we could try to just keep a variable that stores the index of the max element, but once it
+falls outside of the k sized window, how would we know what the NEXT max element for the current window is?
+
+
+this is where the DEQUE comes in.
+if we keep a structure that allows us to pop from both ends, we can:
+    -always keep the largest element in the current window at the left end
+    -any time the largest element falls outside of the current window, pop it off the deque
+
+
 '''
 from collections import deque
 

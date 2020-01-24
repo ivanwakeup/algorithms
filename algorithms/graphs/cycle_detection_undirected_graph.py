@@ -88,3 +88,6 @@ sol = Solution()
 edges = [[1,4],[3,4],[1,3],[1,2],[4,5]]
 
 print(sol.findRedundantConnection(edges))
+
+
+

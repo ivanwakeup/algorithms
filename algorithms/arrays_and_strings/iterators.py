@@ -50,7 +50,6 @@ class IntersectionIterator:
         return i1
 
 
-
 it1 = Iterator([1,2,4,5,6])
 it2 = Iterator([1,3,5])
 

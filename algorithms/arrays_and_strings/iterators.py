@@ -50,8 +50,8 @@ class IntersectionIterator:
         return i1
 
 
-it1 = Iterator([1,2,4,5,6])
-it2 = Iterator([1,3,5])
+it1 = Iterator([])
+it2 = Iterator([1])
 
 ii = IntersectionIterator(it1, it2)
 

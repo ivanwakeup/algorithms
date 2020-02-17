@@ -50,9 +50,4 @@ class IntersectionIterator:
         return i1
 
 
-it1 = Iterator([])
-it2 = Iterator([1])
 
-ii = IntersectionIterator(it1, it2)
-
-print(ii.next(), ii.next(), ii.next())

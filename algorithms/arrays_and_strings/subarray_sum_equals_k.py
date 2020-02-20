@@ -71,11 +71,14 @@ that contains our target
 '''
 from collections import defaultdict
 class Solution:
-    def subarraySum(self, nums: List[int], k: int) -> int:
+    def subarraySum(self, nums, k):
         d = defaultdict(int)
         d[0] = 1
         result = 0
         rolling = 0
         for i, num in enumerate(nums):
             rolling+=num
-            d[rolling]
+            if rolling-k in d:
+                result+= d[rolling-k]
+            d[rolling] = d[rolling]+1
+        return result

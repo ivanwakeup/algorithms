@@ -1,32 +1,3 @@
-'''
-Given an array, rotate the array to the right by k steps, where k is non-negative.
-
-Example 1:
-
-Input: [1,2,3,4,5,6,7] and k = 3
-Output: [5,6,7,1,2,3,4]
-Explanation:
-rotate 1 steps to the right: [7,1,2,3,4,5,6]
-rotate 2 steps to the right: [6,7,1,2,3,4,5]
-rotate 3 steps to the right: [5,6,7,1,2,3,4]
-Example 2:
-
-Input: [-1,-100,3,99] and k = 2
-Output: [3,99,-1,-100]
-Explanation:
-rotate 1 steps to the right: [99,-1,-100,3]
-rotate 2 steps to the right: [3,99,-1,-100]
-Note:
-
-Try to come up as many solutions as you can, there are at least 3 different ways to solve this problem.
-Could you do it in-place with O(1) extra space?
-
-'''
-
-
-'''
-b
-'''
 def rotate(nums, k):
     for i in range(k):
         new_nums = [nums[-1]] + nums[:-1]
@@ -36,22 +7,34 @@ def rotate(nums, k):
 print(rotate([1,2,3,4,5,6,7], 3))
 
 
-'''
-an ok linear time solution, just use a result array and compute the new bucket via (i+k)%len(arr)
-'''
 
 
+
+'''
+a routine to remember:
+
+we can rotate an array by K steps by just:
+reversing the array
+then reversing the first K elements
+then reversing the remaining k: len(arr) elements
+
+its like magic, but the shit works.
+'''
 class Solution:
     def rotate(self, nums, k):
         """
-        Do not return anything, modify nums in-place instead.
+        :type nums: List[int]
+        :type k: int
+        :rtype: void Do not return anything, modify nums in-place instead.
         """
-        result = [0 for _ in range(len(nums))]
-        for i, num in enumerate(nums):
-            pos = (i + k) % len(nums)
-            result[pos] = num
+        k = k % len(nums)
 
-        for i, n in enumerate(result):
-            nums[i] = n
+        self.rev(nums, 0, len(nums)-1)
+        self.rev(nums, 0, k-1)
+        self.rev(nums, k, len(nums)-1)
 
-
+    def rev(self, nums, lo, hi):
+        while lo < hi:
+            nums[lo], nums[hi] = nums[hi], nums[lo]
+            lo+=1
+            hi-=1

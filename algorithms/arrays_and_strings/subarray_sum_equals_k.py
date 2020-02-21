@@ -48,3 +48,34 @@ class Solution(object):
 sol = Solution()
 data = [3,4,7,2,-3,1,7,2]
 print(sol.subarraySum(data, 7))
+
+
+
+
+
+'''
+the optimized approach has some intuitions:
+
+we need to realize a few things. first: if the cumulative some at some index J is the SAME as it is at some previous index I, then the sum between those two elements must be 0
+
+extend the idea to realize that if the difference of sums[i] and sums[j] is K, the sum between those elements is K.
+
+
+THE MAIN INTUITION:
+we really just need to keep track of two things, then:
+1. what is the cumulative sum up to index i? if its k, then we found a subarray
+2. have we seen the sum sum[i]-k before? if we do then we KNOW we just found a new segment of array
+that contains our target
+
+
+'''
+from collections import defaultdict
+class Solution:
+    def subarraySum(self, nums: List[int], k: int) -> int:
+        d = defaultdict(int)
+        d[0] = 1
+        result = 0
+        rolling = 0
+        for i, num in enumerate(nums):
+            rolling+=num
+            d[rolling]

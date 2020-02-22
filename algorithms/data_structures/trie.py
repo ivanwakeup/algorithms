@@ -10,9 +10,6 @@ class Trie:
         self.root = None
         self.children = {}
 
-    def has_word(self, word):
-        pass
-
     def has_prefix(self, pref):
         root, word = self.traverse_while_prefix(pref)
         if not word:

@@ -16,6 +16,16 @@ Output:
   []
 ]
 
+intution:
+
+this differs from subsets 1 because we might start buildign a path in our recursion that we've seen before. How do we keep track of if we've
+seen it before?
+
+we take advantage of the SORTED input and the order of DFS to stop early on paths we've seen before
+
+tried to use a set originally, but this doesn't work because sets aren't ordered. actually.....if we first sort the path
+and USE that as the set to check if we've seen it already, that might work.
+
 '''
 
 
@@ -32,9 +42,8 @@ class Solution:
                 return
             for j in range(i, len(nums)):
                 nxt = path + [nums[j]]
-                nxt.sort()
                 dfs(nums, j + 1, nxt, frozenset([str(nxt)]))
-
+        nums.sort()
         dfs(nums, 0, [], frozenset())
         return res
 

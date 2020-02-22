@@ -19,10 +19,11 @@ INTUITION
 order that avoids reconsidering sequences that we've already built, then we don't have to build
 EVERY permutation of EVERY possible 
 '''
+
 def numTilePossibilities(tiles):
     result = set()
 
-    def dfs(arr, path, idxs):
+    def dfs(arr, path):
         # this is the "backtracking" part. if we've already started
         # to build a path that contains a prefix we've seen before,
         # we KNOW we've already built anything else that path can contain
@@ -30,16 +31,15 @@ def numTilePossibilities(tiles):
         if path in result:
             return
         if path:
+            print(path)
             result.add(path)
-        for j in range(len(arr)):
-            if j in idxs:
-                continue
-            nxt = idxs.copy()
-            nxt.add(j)
-            dfs(arr, path + arr[j], nxt)
-            nxt.remove(j)
+        nxt = list(arr)[:]
+        for j in range(len(nxt)):
+            nxtpath = path + nxt[j]
+            pas = nxt[:j] + nxt[j+1:]
+            dfs("".join(pas), nxtpath)
 
-    dfs(tiles, "", set())
+    dfs(tiles, "")
     return len(result)
 
-assert numTilePossibilities("AAB") == 8
+print(numTilePossibilities("AAABDLAHDFBC"))

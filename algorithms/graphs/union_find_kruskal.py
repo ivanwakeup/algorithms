@@ -67,7 +67,11 @@ def print_graph_dfs(g):
 kruskals algorithm effectively works as follows:
 
 we use a union-find structure to make sure we don't include nodes that would form a CYCLE in the minimum spanning tree
-    - if a new edge that we're considering adding is part if an existing set in union-find, we discard it
+    - if a new edge that we're considering adding is part of an existing set in union-find, we discard it
+    
+    
+WHY DO WE DISCARD EDGES THAT FORM CYCLES?
+because if the edge forms a cycle, we can already reach every node in the subset of nodes we're considering.
 
 we process the nodes in sorted order by edge cost, this will lead us to the minimum spanning tree
     - this also ensures we don't pick higher cost edges that would create a cycle 

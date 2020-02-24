@@ -18,6 +18,15 @@ Input:
 Output:
 [[5,0], [7,0], [5,2], [6,1], [4,4], [7,1]]
 
+
+sorted from low to high by height, high to low by K:
+
+[[4,4], [5,2], [5,0], [6,1], [7,1], [7,0]]
+
+
+sorted from high to low by height, low to high by K:
+[[7,0], [7,1], [6,1], [5,0], [5,2], [4,4]]
+
 '''
 
 

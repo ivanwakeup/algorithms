@@ -3,9 +3,9 @@ class Solution:
         chk = set()
         for r in range(len(board)):
             for c in range(len(board[0])):
-                if not self.col_valid(board, r, c) or not self.row_valid(board, r, c):
+                if not self.valid(board, r, c, "c") or not self.valid(board, r, c, "r"):
                     return False
-                tr, tc = self.get_topleft(board, r, c)
+                tr, tc = self.get_topleft(r, c)
                 cell = "{}{}".format(tr, tc)
                 if cell not in chk:
                     if not self.cell_valid(board, r, c):
@@ -13,32 +13,20 @@ class Solution:
                     chk.add(cell)
         return True
 
-    def col_valid(self, board, row, col):
+    def valid(self, board, row, col, symbol):
         chk = board[row][col]
         if chk == ".":
             return True
-        start = (row + 1) % len(board)
-        while start != row:
-            if board[start][col] == chk:
+        start = col+1 if symbol == "c" else row+1
+        while start < 9:
+            cmp = board[start][col] if symbol == "c" else board[row][start]
+            if cmp == chk:
                 return False
             start += 1
-            start %= len(board)
-        return True
-
-    def row_valid(self, board, row, col):
-        chk = board[row][col]
-        if chk == ".":
-            return True
-        start = (col + 1) % len(board[0])
-        while start != row:
-            if board[row][start] == chk:
-                return False
-            start += 1
-            start %= len(board[0])
         return True
 
     def cell_valid(self, board, row, col):
-        row_begin, col_begin = self.get_topleft(board, row, col)
+        row_begin, col_begin = self.get_topleft(row, col)
 
         seen = set()
         for r in range(row_begin, row_begin + 3):
@@ -50,5 +38,18 @@ class Solution:
                 seen.add(board[r][c])
         return True
 
-    def get_topleft(self, board, r, c):
+    def get_topleft(self, r, c):
         return (r // 3) * 3, (c // 3) * 3
+
+sol = Solution()
+sol.isValidSudoku([
+  ["5","3",".",".","7",".",".",".","."],
+  ["6",".",".","1","9","5",".",".","."],
+  [".","9","8",".",".",".",".","6","."],
+  ["8",".",".",".","6",".",".",".","3"],
+  ["4",".",".","8",".","3",".",".","1"],
+  ["7",".",".",".","2",".",".",".","6"],
+  [".","6",".",".",".",".","2","8","."],
+  [".",".",".","4","1","9",".",".","5"],
+  [".",".",".",".","8",".",".","7","9"]
+])

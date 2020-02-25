@@ -18,7 +18,7 @@ time answer if we pre compute the array's prefix sum
 '''
 
 
-class Solution(object):
+class Solution  (object):
     def subarraySum(self, nums, k):
         """
         :type nums: List[int]
@@ -45,9 +45,6 @@ class Solution(object):
 
 
 
-sol = Solution()
-data = [3,4,7,2,-3,1,7,2]
-print(sol.subarraySum(data, 7))
 
 
 
@@ -68,6 +65,15 @@ we really just need to keep track of two things, then:
 that contains our target
 
 
+A BIG THING TO UNDERSTAND:
+we keep track of the number of times we've seen a given sum. this is important. if we've seen a given sum twice, for example,
+and then we see it again--we know we've got at least TWO subarrays that include the now third time we've seen that number.
+
+
+further, we keep track of how many times we've seen a sum REGARDLESS of if the rolling-k is in the dict. WHY?
+because this sum might later represent a rolling-k which IS in the dict which tells us we just found a window of sum K.
+
+
 '''
 from collections import defaultdict
 class Solution:
@@ -81,4 +87,10 @@ class Solution:
             if rolling-k in d:
                 result+= d[rolling-k]
             d[rolling] = d[rolling]+1
+            print(d)
         return result
+
+
+sol = Solution()
+data = [3,4,7,2,-3,1,4,3,-3,3,-3,3,-3,3,-3,3]
+print(sol.subarraySum(data, 7))

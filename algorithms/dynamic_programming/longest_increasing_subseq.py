@@ -14,25 +14,42 @@ Follow up: Could you improve it to O(n log n) time complexity?
 '''
 
 
+'''
+here's an incorrect solution. this solution assumes that dp[i] stores the BEST LIS we could make up
+to that point.
+unfortunately, we can't do this. instead, what dp[i] must answer is "if we DO include this element, whats the best LIS"?
 
-# class Solution(object):
-#     def lengthOfLIS(self, nums):
-#
-#         dp = [1] * len(nums)
-#         for i in range(1, len(nums)):
-#             if nums[i] > nums[i-1]:
-#                 dp[i] = dp[i-1] + 1
-#             else:
-#                 dp[i] = dp[i-1]
-#
-#         return dp[-1]
-#
-#
-# sol = Solution()
-# print(
-#     sol.lengthOfLIS([10,22,9,33,21,50,41,60,80])
-# )
+to see the difference, check out this example:
 
+[4,10,4,9] -> if we use the erroneous approach, our dp array would look like: [1,2,2,3], which gives the wrong result
+      ^
+      
+when we are considering idx 3, the best LIS we can make by including it is length 1 => [4,10,4]. so our dp[i] SHOULD
+look like: [1,2,1]
+
+and then when we add 9 -> [4,10,4,9]
+dp = [1,2,1,2]
+
+see the correct example below for how this has to be handled.
+'''
+
+class Solution_incorrect(object):
+    def lengthOfLIS(self, nums):
+
+        dp = [1] * len(nums)
+        for i in range(1, len(nums)):
+            if nums[i] > nums[i-1]:
+                dp[i] = dp[i-1] + 1
+            else:
+                dp[i] = dp[i-1]
+
+        return dp[-1]
+
+
+
+'''
+correct solution that doesn't "carry forward" dp[i-1], but instead marks dp[i] as the "best we can do by ADDING the i'th element"
+'''
 class Solution(object):
     def lengthOfLIS(self, nums):
 

@@ -35,13 +35,17 @@ def lengthOfLIS(nums):
     for x in nums:
         i, j = 0, size
         while i != j:
-            m = (i + j) / 2
+            m = (i + j) // 2
             if tails[m] < x:
                 i = m + 1
             else:
                 j = m
         tails[i] = x
         size = max(i + 1, size)
+
+    print(tails)
     return size
 
 # Runtime: 48 ms
+
+print(lengthOfLIS([10,9,2,5,3,7,101,18]))

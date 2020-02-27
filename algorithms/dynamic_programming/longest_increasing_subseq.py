@@ -13,16 +13,43 @@ Your algorithm should run in O(n2) complexity.
 Follow up: Could you improve it to O(n log n) time complexity?
 '''
 
+
+
+# class Solution(object):
+#     def lengthOfLIS(self, nums):
+#
+#         dp = [1] * len(nums)
+#         for i in range(1, len(nums)):
+#             if nums[i] > nums[i-1]:
+#                 dp[i] = dp[i-1] + 1
+#             else:
+#                 dp[i] = dp[i-1]
+#
+#         return dp[-1]
+#
+#
+# sol = Solution()
+# print(
+#     sol.lengthOfLIS([10,22,9,33,21,50,41,60,80])
+# )
+
 class Solution(object):
     def lengthOfLIS(self, nums):
-        if not nums:
-            return 0
 
         dp = [1] * len(nums)
-        result = 1
+        result = 0
         for i in range(1, len(nums)):
             for j in range(i):
                 if nums[i] > nums[j]:
-                    dp[i] = max(1 + dp[j], dp[i])
+                    dp[i] = max(dp[i], 1+dp[j])
                     result = max(dp[i], result)
         return result
+
+
+sol = Solution()
+print(
+    sol.lengthOfLIS([4,10,4,3,8,9])
+)
+
+
+

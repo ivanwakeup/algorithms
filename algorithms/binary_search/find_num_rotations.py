@@ -3,7 +3,7 @@ given a rotated sorted array, find the number of times the array is rotated!
 
 ex:
 
-arr = [8.9.10.2.5.6] ans = rotated 3 times
+arr = [8,9,10,2,5,6] ans = rotated 3 times
 arr = [2,5,6,8,9,10] ans = rotated 0 times
 
 
@@ -19,8 +19,6 @@ log = logging.getLogger()
 
 
 def find_num_rotations(arr):
-    if not arr or len(arr) == 1:
-        return 0
     lo, hi = 0, len(arr)-1
     while lo<= hi:
         mid = (lo+hi)//2

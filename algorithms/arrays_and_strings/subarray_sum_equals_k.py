@@ -92,5 +92,5 @@ class Solution:
 
 
 sol = Solution()
-data = [3,4,7,2,-3,1,4,3,-3,3,-3,3,-3,3,-3,3]
+data = [3,4,7,2,-3,1,4,3]
 print(sol.subarraySum(data, 7))

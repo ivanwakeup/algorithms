@@ -49,6 +49,25 @@ class Solution_incorrect(object):
 
 '''
 correct solution that doesn't "carry forward" dp[i-1], but instead marks dp[i] as the "best we can do by ADDING the i'th element"
+
+INTUITION for the correct solution:
+
+at any given index nums[i], we want to answer:
+CAN i make a longer increasing subseq by including this element?
+
+to answer this question, we can't just consider the i-1th element, because the i-1th element might NOT be part
+of the LIS
+
+DP[I] DOES NOT DENOTE THE "BEST YOU CAN DO AT i". it denotes "THE BEST YOU CAN DO IFF YOU TRY AND EXTEND the LIS by including
+this element".
+
+With that in mind, we can see why we would need to check every index i that is less than our current index j and apply the same
+logic. the answer for dp[i] does not lie just at dp[i-1], because, again, we need to know "what is the best i can do by INCLUDING
+this current element"
+
+so, we have to check EVERY i less than j and answer, is my nums[i] > nums[j]? if so, i can make a LIS that is at least 1 longer.
+this is what we store in dp[i].
+
 '''
 class Solution(object):
     def lengthOfLIS(self, nums):
@@ -69,4 +88,9 @@ print(
 )
 
 
+'''
+recursive formulation:
+
+lis(nums, i) = 1 + lis(nums, i-1) if nums[i] > nums[i-1] else lis(nums, i-1)
+'''
 

@@ -58,12 +58,12 @@ class Solution:
 
             return res
 
-        found = False
-
         for row in range(len(board)):
             for col in range(len(board[0])):
                 if board[row][col] == word[0]:
-                    found = dfs(board, row, col, 0)
-                    if found:
-                        return found
-        return found
+                    if dfs(board, row, col, 0):
+                        return True
+
+        return False
+
+

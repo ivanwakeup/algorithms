@@ -1,4 +1,3 @@
-import sys
 import requests
 from collections import OrderedDict
 
@@ -6,8 +5,10 @@ from collections import OrderedDict
 class LRUCache:
 
     def __init__(self, size):
+        #use ordereddict for LRU cache to get near-constant time LRU lookups
         self.cache = OrderedDict()
         self.size = size
+        self.used = 0
 
     def get(self, key):
         if key in self.cache:
@@ -18,11 +19,16 @@ class LRUCache:
         return None
 
     def set(self, key, value):
+        self.size-=len(value)
+        print(self.size)
+        while self.size < 0 and len(self.cache) >= 1:
+            print("cache size limit reached, evicting key...")
+            lru = self.cache.popitem(last=False)
+            self.size+=len(lru[1])
         if key in self.cache:
             del self.cache[key]
         self.cache[key] = value
         return
-
 
 
 result = []

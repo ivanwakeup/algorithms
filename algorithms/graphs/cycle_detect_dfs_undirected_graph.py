@@ -46,20 +46,26 @@ class Solution:
             return g
 
         graph = build_graph(edges)
-        visited = set()
+        cyc = []
+        print(graph)
 
-        def dfs(start, prev):
+        def dfs(g, visited, start, prev):
             visited.add(start)
-            for neigh in graph[start]:
+            for neigh in g[start]:
+                if neigh in visited and prev and prev != neigh:
+                    cyc.append([start, neigh])
                 if neigh not in visited:
-                    dfs(neigh, start)
+                    dfs(g, visited, neigh, start)
 
+        for key in graph.keys():
+            dfs(graph, set(), key, None)
 
-        build_graph(edges)
-
-
+        cyc.sort()
+        return cyc
 
 
 sol = Solution()
-edges = [[1,2], [2,3], [3,4], [1,4], [1,5]]
-sol.findRedundantConnection(edges)
+edges = [[1,2], [1,3], [2,3]]
+print(
+    sol.findRedundantConnection(edges)
+)

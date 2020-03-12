@@ -1,21 +1,20 @@
-def strStr(haystack, needle):
-    if needle == "" or needle == haystack:
-        return 0
-    i = 0
-    j = 0
-    while i<len(haystack) and j<len(needle):
-        if needle[j] == haystack[i]:
-            j += 1
-            i += 1
-        elif j > 0:
-            i = j
+class Solution:
+    def strStr(self, haystack: str, needle: str) -> int:
+        res = -1
+        for i in range(len(haystack)):
             j = 0
-        else:
-            i +=1
-            j = 0
+            prev = i
+            while haystack[i] == needle[j]:
+                i+=1
+                j+=1
+                if j == len(needle):
+                    return prev
+        return res
 
-    return i - len(needle) if j == len(needle) else -1
+sol = Solution()
 
-
-
-print(strStr("mississippi", "issip"))
+print(
+    sol.strStr("mississippi", "issip"),
+    sol.strStr("hello", "ll"),
+    sol.strStr("aaaaa", "bba")
+)

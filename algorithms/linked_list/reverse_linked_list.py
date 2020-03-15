@@ -4,25 +4,24 @@
 #         self.val = x
 #         self.next = None
 '''
-for loop states:
-1>2>3>4>5 goes to NULL<1   NULL<2
+just use a prev and a curr pointer
+
+as we traverse, the CURR node should be reset to point to prev
+we need to save TMP to keep track of where to go next
+finally, move prev forward to CURR and set curr = tmp
+
+at the end, PREV contains our answer because it will be the last node we processed (which would've pointed to NULL in original list,
+meaning CURR contains NULL and not our new head at the end of iteration)
 '''
 
 
 class Solution:
     def reverseList(self, head):
-        length = 0
-        dum = head
-        while head:
-            length += 1
-            head = head.next
-        for _ in range(length):
-            dum.next, dum, head = head, dum.next, dum
-            '''
-            this inline reversal is equivalent to:
-            temp = dum.next
-            dum.next = head
-            head = dum
-            dum = temp
-            '''
-        return head
+        prev = None
+        curr = head
+        while curr:
+            tmp = curr.next
+            curr.next = prev
+            prev = curr
+            curr = tmp
+        return prev

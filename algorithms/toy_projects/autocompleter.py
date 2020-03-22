@@ -1,26 +1,29 @@
 '''
 input:
 N, number of words to hydrate trie with
-N-lines of words
-K, prefixes to check
-K-lines of prefixes
+M, number of words to check in trie
+N-Lines of words
+M-Lines of words to check
 
 read stdin, return list of possible words for the autocomplete?
 '''
+
+import fileinput
 
 
 class Trie:
 
     def __init__(self):
-        self.root = {}
+        self.root = [{}, []]
 
-    def add_word(self, word):
-        t = self.root
+    def add_word(self, word, rank):
+        t = self.root[0]
         for char in word:
             if char in t:
-                t = t[char]
+                t[1].append([word, rank])
+                t = t[0]
             else:
-                t[char] = {}
+                t[char] = [{}, [[word, rank]]]
                 t = t[char]
         t["#"] = "#"
 
@@ -31,6 +34,10 @@ class Trie:
                 return None
             t = t[char]
         return t
+
+    def get_words_at_prefix(self, prefix):
+        t = self.traverse(prefix)
+        return t[1]
 
     def has_prefix(self, prefix):
         if self.traverse(prefix):
@@ -64,17 +71,13 @@ class Trie:
 
 def get_words_and_prefixes(file_obj):
     num_words = int(file_obj.readline().strip())
-    words = []
-    cur = 0
-    while cur < num_words:
-        words.append(file_obj.readline().strip())
-        cur+=1
     num_prefixes = int(file_obj.readline().strip())
+    words = []
     prefixes = []
-    cur = 0
-    while cur < num_prefixes:
+    for line in range(num_words):
+        words.append([file_obj.readline().strip(), line])
+    for line in range(num_prefixes):
         prefixes.append(file_obj.readline().strip())
-        cur+=1
     return words, prefixes
 
 
@@ -87,6 +90,9 @@ def generate_output(words, prefixes):
         output.append(t.get_words_for_prefix(prefix))
     return output
 
+
+with fileinput.input() as f:
+    words, prefixes = get_words_and_prefixes(f)
 
 with open('autocompleter.txt') as f:
     words, prefixes = get_words_and_prefixes(f)

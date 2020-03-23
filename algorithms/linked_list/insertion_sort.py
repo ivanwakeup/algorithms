@@ -7,37 +7,45 @@ class ListNode:
         return f"{str(self.val)}->{str(self.next)}"
 
 
-class Solution:
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
 
+'''
+
+'''
+class Solution(object):
     def insertionSortList(self, head):
-        if not head or not head.next:
+        """
+        :type head: ListNode
+        :rtype: ListNode
+        """
+        if head is None:
             return head
-        dummy = ListNode('dummy')
+        dummy = ListNode(-1)
         dummy.next = head
-        curr = head.next
-        prev = head
-        while curr:
-            #save the next node to consider
-            nxt = curr.next
-            runner = dummy
-            if curr.val < prev.val:
-                #runner moves forward until it precedes curr's new position
-                while runner.next != curr and runner.next.val <= curr.val:
-                    runner = runner.next
-                #"swap" the unsorted node into the correct position
-                if runner.next != curr:
-                    prev.next = curr.next
-                    tmp = runner.next
-                    runner.next = curr
-                    curr.next = tmp
+        p = head.next
+        pre = head
+        while p:
+            nxt = p.next
+            q = dummy
+            if p.val < pre.val:
+                #move q forward until it preceeds insertion point
+                while q.next.val < p.val:
+                    q = q.next
+                #delete p from its position
+                pre.next = p.next
+                tmp = q.next
+                #insert p after q
+                q.next = p
+                p.next = tmp
+            #only update pre if we didn't insert. if we did insert, pre points to the
+            #end of the sorted list.
             else:
-                prev = curr
-            '''prev represents the 'end' of the sorted portion of the linked list. 
-               if we performed no swap on this iteration then that means prev and curr 
-               were already in sorted order, so we move prev forward to the curr. If we performed a swap,
-               prev needs to stay pointing to the node it points to, because that node now represents
-               the end of the sorted portion of the list.'''
-            curr = nxt
+                pre = p
+            p = nxt
         return dummy.next
 
 

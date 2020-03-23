@@ -30,6 +30,7 @@ def counting_sort(arr):
         aux[j] = aux[j-1] + aux[j]
 
     result = [float('-inf') for _ in arr]
+    print(aux)
     for num in arr:
         cnt = aux[num-1]
         result[cnt] = num

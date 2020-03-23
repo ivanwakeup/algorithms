@@ -1,10 +1,9 @@
 '''
 
-we don't even need to maintain a sorted partition. basically just consdier, starting from index 1
-whether the current index is smaller than the one before it.
-
-WHILE it is smaller,
-swap it with the one before it.
+intuitions:
+1. everything up to arr[i] is sorted
+2. when considering arr[i], it may be not in sorted position
+3. therefore, we need to scan backwards through the array and swap
 '''
 
 def insertion_sort(arr):

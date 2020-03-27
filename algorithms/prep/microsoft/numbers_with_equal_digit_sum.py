@@ -9,8 +9,19 @@ same applies 71 and 17, their digits sum to 8 respectively but their total sum i
 
 plan:
 iterate over numbers, and calculate each number's digit sum (constant time because numbers are guaranteed < 1bln
-keep a hashmap of digit_sum => max_heap(digits)
+keep a hashmap of digit_sum => min_heap(digits)
 iterate over hashmap keys, and pop the top two values off each heap, add them together, this is the answer
+
+
+some optimizations:
+1. dont let any heap grow past size two, that will keep the time complexity of popping off the heap constant
+    -because we don't let the heap size grow past two, we use a MIN_HEAP instead of a max heap because
+     we know it will always contain the values we're interested in.
+
+
+complexity:
+0(n) given that our heap stays a constant size, and integers for which we calculate the digit sum are never larger than 1 billion
+
 '''
 from collections import defaultdict
 from queue import PriorityQueue
@@ -22,16 +33,18 @@ def nums_equal_digit_sum(nums):
         local_sum = 0
         for char in num:
             local_sum+=int(char)
-        d[local_sum].put(-int(num))
+        if d[local_sum].qsize() >= 2:
+            heapnum = d[local_sum].get()
+            d[local_sum].put(max(heapnum, int(num)))
+        else:
+            d[local_sum].put(int(num))
     result = 0
     for key in d.keys():
         if d[key].qsize() < 2:
             continue
         local_result = 0
-        popped = 0
-        while not d[key].empty() and popped<2:
-            local_result+= -d[key].get()
-            popped+=1
+        while not d[key].empty():
+            local_result+= d[key].get()
         result = max(local_result, result)
 
     return result if result else -1

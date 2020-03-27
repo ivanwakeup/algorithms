@@ -35,8 +35,7 @@ def get_min_moves(s):
         else:
             result += run_length // 3
             run_length=1
-
     result+=run_length//3
     return result
 
-print(get_min_moves("abbbaaabbb"))
+print(get_min_moves("abbbbbbb"))

@@ -46,6 +46,7 @@ def merge(i1, i2):
 
 from queue import PriorityQueue
 def get_num_meeting_rooms(meetings):
+    meetings.sort(key=lambda x: x[1])
     pq = PriorityQueue()
     if not meetings:
         return 0
@@ -63,7 +64,8 @@ def get_num_meeting_rooms(meetings):
 
 
 datas = [
-    [(0, 30), (5, 10), (15, 20)]
+    [(0, 30), (5, 10), (15, 20)],
+    [(0,4), (3,7), (5, 8)]
 ]
 
 for data in datas:

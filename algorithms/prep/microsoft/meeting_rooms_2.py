@@ -55,17 +55,23 @@ def get_num_meeting_rooms(meetings):
     for i in range(1, len(meetings)):
         if overlaps(pq.queue[0][1], meetings[i]):
             pq.put((meetings[i][1], meetings[i]))
+            result += 1
         else:
             node = pq.get()
-            to_put = merge(node[1], meetings[i])
+            to_put = tuple(merge(node[1], meetings[i]))
             pq.put((to_put[1], to_put))
-            result += 1
+
     return result
 
 
 datas = [
     [(0, 30), (5, 10), (15, 20)],
-    [(0,4), (3,7), (5, 8)]
+    [(0,4), (3,7), (5, 8)],
+    [(0,1)],
+    [],
+    [(0,1), (2,3), (4,5)],
+    [(0,5), (1, 4), (2, 3), (4, 4)],
+    [(0, 30), (5, 10), (15, 20), (1, 15)]
 ]
 
 for data in datas:

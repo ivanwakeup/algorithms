@@ -14,6 +14,7 @@ iterate over A, keeping track of the current sum in both A and B. if the sum(A)-
 index in A so check that it's also valid in B. if so, return that index.
 '''
 
+
 def fair_indexes(a, b):
     if len(a) != len(b):
         raise ValueError
@@ -35,7 +36,8 @@ datas = [
     ([2,-2,-3,3], [0,0,4,-4], 1),
     ([4,-1,0,3], [-2,6,0,4], 0),
     ([3,2,6], [4,1,6], 0),
-    ([1,4,2,-2,5], [7,-2,-2,2,5], 2)
+    ([1,4,2,-2,5], [7,-2,-2,2,5], 2),
+    ([0,0,0,0,0], [0,0,0,0,0], 4)
 ]
 
 for data in datas:

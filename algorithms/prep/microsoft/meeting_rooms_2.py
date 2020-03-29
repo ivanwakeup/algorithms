@@ -46,7 +46,7 @@ def merge(i1, i2):
 
 from queue import PriorityQueue
 def get_num_meeting_rooms(meetings):
-    meetings.sort(key=lambda x: x[1])
+    meetings.sort(key=lambda x: x[0])
     pq = PriorityQueue()
     if not meetings:
         return 0
@@ -54,12 +54,12 @@ def get_num_meeting_rooms(meetings):
     pq.put((meetings[0][1], meetings[0]))
     for i in range(1, len(meetings)):
         if overlaps(pq.queue[0][1], meetings[i]):
+            pq.put((meetings[i][1], meetings[i]))
+        else:
             node = pq.get()
             to_put = merge(node[1], meetings[i])
             pq.put((to_put[1], to_put))
-            result+=1
-        else:
-            pq.put((meetings[i][1], meetings[i]))
+            result += 1
     return result
 
 

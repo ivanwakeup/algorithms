@@ -80,6 +80,11 @@ def min_deletions_partitioning_approach(s):
     return result
 
 
+'''
+we CAN also solve this with dynamic programming.
+'''
+
+
 datas = [
     ("BBAAABA", 3),
     ("BAAABAB", 2),
@@ -89,7 +94,9 @@ datas = [
     ("BBBBB", 0),
     ("ABABAB", 2),
     ("BBBAAABAB", 4),
-    ("BBBAAABBB", 3)
+    ("BBBAAABBB", 3),
+    ("B", 0),
+    ("ABABABBBBBA", 3)
 ]
 
 for data in datas:

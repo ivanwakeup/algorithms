@@ -31,7 +31,13 @@ the total of swaps needed for moving the current R (s[i]) towards the MID r inde
 (the number of swaps needed to move R towards the middle R) - (num Rs in between that R and the mid R)
 
 the idxs array helps us answer how many Rs are there between the R we're moving toward the mid and the mid R,
-denoted by (idxs.index(i) - mid)
+
+
+
+what is the length between the mid R and the R we're moving inwards? => (idxs[mid] - idxs[i])
+what is the number of Rs between the mid R and the R we're moving? => (mid - i)
+
+the majority of this answer is understanding THAT formula.
 '''
 
 
@@ -41,17 +47,18 @@ def min_swaps_to_group_balls(s):
         if s[i] == "R":
             idxs.append(i)
     mid = len(idxs)//2
-    mid_idx = idxs[mid]
     result = 0
-    for i in range(len(s)):
-        if s[i] == "R":
-            result += abs(mid_idx - i) - abs(idxs.index(i) - mid)
+    for i in range(len(idxs)):
+        result += abs(idxs[i] - idxs[mid]) - abs(mid - i)
     return result
 
 datas = [
     ("RWWWWR", 4),
     ("WRRWWR", 2),
-    ("RWRWRWR", 4)
+    ("RWRWRWR", 4),
+    ("WWW", 0),
+    ("RRR", 0),
+    ("WRWWRWRWWR", 6)
 ]
 
 for data in datas:

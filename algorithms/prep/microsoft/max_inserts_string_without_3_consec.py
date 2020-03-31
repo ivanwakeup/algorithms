@@ -20,6 +20,7 @@ keep track of how many a's we've seen between the current char and the next non-
 
 '''
 
+
 def max_inserts_string_3_chars(s):
     result = 0
     count = 0
@@ -41,7 +42,11 @@ datas = [
     ("a", 1),
     ("aa", 0),
     ("baabaa", 2),
-    ("ba", 3)
+    ("ba", 3),
+    ("", 2),
+    ("aaa", -1),
+    ("caabdfaafaaa", -1),
+    ("aaba", 1)
 ]
 
 for data in datas:

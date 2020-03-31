@@ -39,7 +39,8 @@ datas = [
     ("abbbcccdd", "abbccdd"),
     ("eeeee", "ee"),
     ("abcabcccdc", "abcabccdc"),
-    ("eeeeeedddddffddddee", "eeddffddee")
+    ("eeeeeedddddffddddee", "eeddffddee"),
+    ("uuuuxaaaaxuuu", "uuxaaxuu")
 ]
 
 for data in datas:

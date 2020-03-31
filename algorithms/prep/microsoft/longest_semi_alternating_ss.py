@@ -22,6 +22,7 @@ use a sliding window, keep moving HI forward until our count_prev_same = 2,
 at which point we move the lo pointer to hi-1 and continue on
 '''
 
+
 def longest_semi_alternating(s):
     if not s:
         return 0
@@ -47,7 +48,8 @@ datas = [
     ("baaabbabbb", 7),
     ("aaa", 2),
     ("a", 1),
-    ("aabbaabb", 8)
+    ("aabbaabb", 8),
+    ("bbbbbbbbbbbaaaaaaaaaabbabb", 7)
 ]
 
 for data in datas:

@@ -99,12 +99,6 @@ datas = [
     ("ABABABBBBBA", 3)
 ]
 
-for data in datas:
-    try:
-        assert(min_deletions(data[0]) == data[1])
-        assert (min_deletions_partitioning_approach(data[0]) == data[1])
-        print(f"assertion passed at {data[0]} for {data[1]}")
-    except AssertionError:
-        print(f"assertion failed at {data[0]} for {data[1]}")
+f
 
 

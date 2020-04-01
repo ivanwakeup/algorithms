@@ -20,3 +20,12 @@ def build_linked_list(elements):
         curr.next = ListNode(item)
         curr = curr.next
     return head.next
+
+
+def assert_test_cases(datas, fxn):
+    for data in datas:
+        try:
+            assert (fxn(*data[:-1]) == data[-1])
+            print(f"assertion passed for {fxn.__name__} with input data {data[:-1]} == {data[-1]}")
+        except AssertionError:
+            print(f"assertion failed for {fxn.__name__} with input data {data[:-1]} == {data[-1]}")

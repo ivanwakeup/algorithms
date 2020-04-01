@@ -14,6 +14,7 @@ iterate over A, keeping track of the current sum in both A and B. if the sum(A)-
 index in A so check that it's also valid in B. if so, return that index.
 '''
 
+from algorithms.utils import assert_test_cases
 
 def fair_indexes(a, b):
     if len(a) != len(b):
@@ -40,9 +41,4 @@ datas = [
     ([0,0,0,0,0], [0,0,0,0,0], 4)
 ]
 
-for data in datas:
-    try:
-        assert(fair_indexes(data[0], data[1]) == data[2])
-        print(f"assertion succeeded for {data[0]}, {data[1]} == {data[2]}")
-    except AssertionError:
-        print(f"assertion failed for for {data[0]}, {data[1]} == {data[2]}")
+assert_test_cases(datas, fair_indexes)

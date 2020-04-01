@@ -32,6 +32,8 @@ the minimum number of swaps we could do would be to just find an index K that is
 but greater than LO that we can swap HI with. once we do, we can move on.
 
 '''
+from algorithms.utils import assert_test_cases
+
 
 def min_swaps_palindrome(s):
 
@@ -75,15 +77,11 @@ def min_swaps_palindrome(s):
 
     return result
 
+
 datas = [
     ("mamad", 3),
     ("damam", 3),
     ("asflkj", -1)
 ]
 
-for data in datas:
-    try:
-        assert (min_swaps_palindrome(data[0]) == data[1])
-        print(f"assertion passed at {data[0]} for {data[1]}")
-    except AssertionError:
-        print(f"assertion failed at {data[0]} for {data[1]}")
+assert_test_cases(datas, min_swaps_palindrome)

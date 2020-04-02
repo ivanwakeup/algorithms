@@ -34,23 +34,65 @@ diff = [inf, 1, 2, 2, 2,1,1]
 dp = [0, 0, 0, 1, 2]
 '''
 
+from typing import List
+
+# class Solution:
+#     def numberOfArithmeticSlices(self, A) -> int:
+#         if not A:
+#             return 0
+#         diff = [0 for _ in range(len(A))]
+#         diff[0] = float('inf')
+#         for i in range(1, len(A)):
+#             diff[i] = A[i] - A[i - 1]
+#         dp = 0
+#         result = 0
+#         for i in range(2, len(A)):
+#             if diff[i] == diff[i - 1]:
+#                 dp = dp + 1
+#                 result += dp
+#             else:
+#                 dp = 0
+#
+#         return result
+#
+# sol = Solution()
+
+'''
+
+[0,0,1,2,3,0,1]
+
+dp[i] answers how many slices does the ith element add?
+    -if it continues a sequence, then it adds 1 + dp[i-1]
+    -if it doesn't then dp[i] = 0, unless we've seen 2 curr-prev
+
+optimization:
+we don't even need a dp array, because the current value of dp only depends on the previous value in each iteration.
+'''
+
 
 class Solution:
-    def numberOfArithmeticSlices(self, A) -> int:
-        if not A:
+    def numberOfArithmeticSlices(self, A: List[int]) -> int:
+
+        if len(A) < 3:
             return 0
-        diff = [0 for _ in range(len(A))]
-        diff[0] = float('inf')
-        for i in range(1, len(A)):
-            diff[i] = A[i] - A[i - 1]
-        dp = 0
+
         result = 0
+        dp = 0
+
+        prev_diff = A[1] - A[0]
+        diff_cnt = 1
         for i in range(2, len(A)):
-            if diff[i] == diff[i - 1]:
-                dp = dp + 1
-                result += dp
+            if A[i] - A[i - 1] != prev_diff:
+                diff_cnt = 1
+                prev_diff = A[i] - A[i - 1]
+            else:
+                diff_cnt += 1
+            if diff_cnt >= 2:
+                dp = 1 + dp
             else:
                 dp = 0
+
+            result += dp
 
         return result
 

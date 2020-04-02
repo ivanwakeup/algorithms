@@ -13,6 +13,10 @@ class TreeNode:
         self.left = None
         self.right = None
 
+    def __repr__(self):
+        return f"TreeNode({self.val})"
+
+
 def build_linked_list(elements):
     head = ListNode('dummy')
     curr = head

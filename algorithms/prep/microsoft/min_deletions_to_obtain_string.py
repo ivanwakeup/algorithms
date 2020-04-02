@@ -44,6 +44,7 @@ to the last character we saw!
 
 '''
 
+from algorithms.utils import assert_test_cases
 
 def min_deletions(s):
     stack = []
@@ -82,11 +83,54 @@ def min_deletions_partitioning_approach(s):
 
 '''
 we CAN also solve this with dynamic programming.
+
+BA => 1
+BBA => 2
+ABAB => 1
+
+ABA = 1
+BBA = 1
+BABA => 2
+
+
+we have 3 main cases to handle:
+1. current char is A and there are Bs before it, we could delete the current A and continue on OR delete all the Bs
+2. current char is B, string is ok but keep track of the Bs we've seen in case we encounter an A
+3. current char is an A and no Bs before, string is ok so continue on
 '''
+
+
+def min_deletions_dp(s):
+
+    def find_min(s, i, b_count, memo):
+        if i >= len(s):
+            return 0
+
+        key = str(i) + ":" + str(b_count)
+        if key in memo:
+            return memo[key]
+
+        if s[i] == "A" and b_count:
+            res = min(
+                    (1 + find_min(s, i+1, b_count, memo)),
+                    b_count + find_min(s, i+1, 0, memo)
+                )
+        elif s[i] == "B":
+            res = find_min(s, i+1, b_count+1, memo)
+        else:
+            res = find_min(s, i + 1, b_count, memo)
+
+        memo[key] = res
+        return res
+
+    result = find_min(s, 0, 0, {})
+    return result
+
 
 
 datas = [
     ("BBAAABA", 3),
+    ("BBAA", 2),
     ("BAAABAB", 2),
     ("BBBAAA", 3),
     ("ABBBBBA", 1),
@@ -96,9 +140,13 @@ datas = [
     ("BBBAAABAB", 4),
     ("BBBAAABBB", 3),
     ("B", 0),
-    ("ABABABBBBBA", 3)
+    ("ABABABBBBBA", 3),
+    ("ABBBAAABB", 3)
 ]
 
-f
+assert_test_cases(datas, min_deletions_dp)
+assert_test_cases(datas, min_deletions_partitioning_approach)
+assert_test_cases(datas, min_deletions)
+
 
 

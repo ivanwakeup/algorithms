@@ -29,5 +29,4 @@ class UnionFindRedundantConnection:
 
 
 edges = [[1,5],[3,4],[3,5],[4,5],[2,4]]
-
 uf = UnionFindRedundantConnection(len(edges), edges)

@@ -7,6 +7,15 @@ class ListNode:
         return f"{str(self.val)}->{str(self.next)}"
 
 
+class KVDoubleNode:
+
+    def __init__(self, key, val):
+        self.key = key
+        self.val = val
+        self.prev = None
+        self.next = None
+
+
 class TreeNode:
     def __init__(self, x):
         self.val = x

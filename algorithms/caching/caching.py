@@ -63,20 +63,6 @@ class SimpleCache(Cache):
             del self.used_map[key]
 
         
-
-# c = SimpleCache()
-# c.set(1, 2)
-# c.set(2, 15)
-# c.get(1)
-# c.get(2)
-# c.get(3)
-# c.get(1)
-# c.set(3, 2)
-# c.set(4, 14)
-# c.set(2, 10)
-# print(c.get(1))
-# print(c.cache)
-        
 from collections import OrderedDict
 
 class BetterLRUCache(Cache):

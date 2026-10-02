@@ -87,7 +87,7 @@ class BetterLRUCache(Cache):
     def _evict_lru(self):
         res = self.cache.popitem(last=False)
         print(self.cache)
-        print(f"evicting latest key at {res}")
+        print(f"evicting oldest key at {res}")
 
     def evict(self):
         self._evict_lru()

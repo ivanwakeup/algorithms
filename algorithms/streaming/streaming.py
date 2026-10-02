@@ -101,8 +101,71 @@ def resevoir_sample(stream, k):
                 
 
 
-for item in resevoir_sample(RandomNumberStream(1, 100), 5):
+# for item in resevoir_sample(RandomNumberStream(1, 100), 5):
+#     print(item)
+
+
+from queue import PriorityQueue
+from dataclasses import dataclass
+from collections import Counter
+
+@dataclass
+class StreamItem:
+    key: str
+    count: int
+
+def top_k_elements(stream, k):
+    hm = {}
+    pq = PriorityQueue()
+    for item in stream:
+        if item in hm:
+            hm[item].count+=1
+        else:
+            hm[item] = StreamItem(item, 1)
+
+        si = hm[item]
+        pq.put((-si.count, si.key))
+        result = []
+        i = 0
+        while i < min(k, len(hm)) and not pq.empty():
+            item = pq.get()
+            if abs(item[0]) != hm[item[1]].count:
+                continue
+            else:
+                result.append(hm[item[1]].key)
+                i+=1
+
+        for item in result:
+            put_back = (-hm[item].count, hm[item].key)
+            pq.put(put_back)
+        print(hm)
+        yield result
+
+from pqdict import pqdict
+
+def top_k_elements_indexed_pq(stream, k):
+    pq = pqdict()
+    for item in stream:
+        if item in pq:
+            pq[item]-=1
+        else:
+            pq[item]=-1
+
+        result = []
+        for _ in range(k):
+            if pq:
+                item = pq.popitem()
+                result.append(item)
+
+        for item in result:
+            pq[item[0]] = item[1]
+
+        yield [x[0] for x in result]
+
+
+for item in top_k_elements_indexed_pq(RandomNumberStream(1, 100), 3):
     print(item)
+
 
 
 

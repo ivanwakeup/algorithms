@@ -268,6 +268,47 @@ class SimpleLFUCache(Cache):
         del self.hm[res.value.key]
 
 
+@dataclass
+class TTLCacheItem:
+    key: str
+    val: str
+    timestamp: float
+
+class TTLCache(Cache):
+
+    def __init__(self, cache_size=3, ttl_minutes=10):
+        self.hm = {}
+        self.cache_size = cache_size
+        self.ttl_minutes = ttl_minutes
+        self._TIME_ADD_NS = 60 * self.ttl_minutes * 1_000_000_000
+    
+    def get(self, key):
+        if key in self.hm:
+            return self.hm[key].val
+        return None
+
+    def put(self, key, value):
+        new_item = TTLCacheItem(key, value, time.monotonic_ns() + self._TIME_ADD_NS)
+        self.hm[key] = new_item
+        if len(self.hm) > self.cache_size:
+            self.evict()
+
+    def evict(self):
+        self._ttl_evict()
+
+    def _ttl_evict(self):
+        cur_time = time.monotonic_ns()
+        to_delete = []
+        for key, _ in self.hm.items():
+            if self.hm[key].timestamp < cur_time:
+                to_delete.append(key)
+        for item in to_delete:
+            del self.hm[item]
+
+    
+
+
+
 
 
 

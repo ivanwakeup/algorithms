@@ -7,3 +7,7 @@ requires-python = ">=3.13"
 dependencies = [
     "pqdict>=1.5.1",
 ]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

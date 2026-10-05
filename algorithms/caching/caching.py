@@ -268,42 +268,73 @@ class SimpleLFUCache(Cache):
         del self.hm[res.value.key]
 
 
+import threading
+
 @dataclass
 class TTLCacheItem:
     key: str
     val: str
-    timestamp: float
+    expired_at: float
 
 class TTLCache(Cache):
 
-    def __init__(self, cache_size=3, ttl_minutes=10):
-        self.hm = {}
+    def __init__(self, cache_size=3, ttl_seconds=10, eviction_thread=False):
+        self.hm = OrderedDict()
         self.cache_size = cache_size
-        self.ttl_minutes = ttl_minutes
-        self._TIME_ADD_NS = 60 * self.ttl_minutes * 1_000_000_000
+        self.ttl_seconds = ttl_seconds
+        self._TIME_ADD_NS = self.ttl_seconds * 1_000_000_000
+        self._lock = threading.Lock()
+
+        #spawn cleaup daemon
+        def background_eviction_loop():
+            while True:
+                self.cleanup()
+                time.sleep(10)
+
+        if eviction_thread:
+            d = threading.Thread(target=background_eviction_loop, daemon=True)
+            d.start()
+
     
     def get(self, key):
-        if key in self.hm:
-            return self.hm[key].val
-        return None
+        with self._lock:
+            if key in self.hm:
+                if self._is_expired(self.hm[key]):
+                    del self.hm[key]
+                    return None
+                else:
+                    return self.hm[key].val
+            return None
 
     def put(self, key, value):
-        new_item = TTLCacheItem(key, value, time.monotonic_ns() + self._TIME_ADD_NS)
-        self.hm[key] = new_item
-        if len(self.hm) > self.cache_size:
-            self.evict()
+        with self._lock:
+            new_item = TTLCacheItem(key, value, time.monotonic_ns() + self._TIME_ADD_NS)
+            if key in self.hm:
+                self.hm.move_to_end(key)
+            self.hm[key] = new_item
+            if len(self.hm) > self.cache_size:
+                self._evict()
 
-    def evict(self):
+    def cleanup(self):
+        with self._lock:
+            self._ttl_evict()
+
+
+    def _evict(self):
         self._ttl_evict()
+        if len(self.hm) > self.cache_size:
+            self._evict_oldest()
+    
 
     def _ttl_evict(self):
-        cur_time = time.monotonic_ns()
-        to_delete = []
-        for key, _ in self.hm.items():
-            if self.hm[key].timestamp < cur_time:
-                to_delete.append(key)
-        for item in to_delete:
-            del self.hm[item]
+        while self.hm and self._is_expired(self.hm[next(iter(self.hm))]):
+            self.hm.popitem(last=False)
+
+    def _evict_oldest(self):
+        self.hm.popitem(last=False)
+
+    def _is_expired(self, item):
+        return item.expired_at < time.monotonic_ns()
 
     
 

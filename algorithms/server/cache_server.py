@@ -24,7 +24,7 @@ def run_cache_server():
         server_socket.bind((HOST, PORT))
         server_socket.listen(5)
         print(f"Server is listening on {HOST}:{PORT}...")
-        cache = TTLCache(cache_size=5, ttl_minutes=1)
+        cache = TTLCache(cache_size=3, ttl_seconds=10, eviction_thread=True)
 
         while True:
             # 4. Block and wait for a client connection

@@ -19,7 +19,7 @@ def word_ladder_length(begin_word: str, end_word: str, word_list: list) -> int:
   from collections import deque
   q = deque()
   q.append((begin_word, 1))
-  visited = set([begin_word])
+  visited = set(begin_word)
   while q:
     item = q.popleft()
     if item[0] == end_word:

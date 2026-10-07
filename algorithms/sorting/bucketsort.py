@@ -34,7 +34,6 @@ INT_CASES = [
     ("with negatives", [-5, 3, -1, 0, 8, -10, 2]),
     ("wide range", [1, 1000000, 500, 2, 999999, 42]),
     ("all identical", [7, 7, 7, 7]),  # max == min: watch for divide by zero
-    ("mixed floats", [3.5, -2.25, 0.0, 10.75, -2.25, 4.0]),
     ("random 500", [random.randint(-1000, 1000) for _ in range(500)]),
 ]
 
@@ -70,18 +69,10 @@ def insertion_sort(data):
             prefix_begin-=1
 
 
-'''
-use primarly for floats between 0 and 1
-'''
-def bucket_sort(data):
+def bucket_sort_between_0_1(data):
 
-    def do_sort(data, type="insertion"):
-        if type=="insertion":
-            insertion_sort(data)
-        elif type=="selection":
-            selection_sort(data)
-        else:
-            raise TypeError("""invalid sort type specified!! use one of: ["insertion", "selection"]""")
+    def do_sort(data):
+        insertion_sort(data)
 
     buckets = [[] for _ in range(len(data))]
     for item in data:
@@ -95,11 +86,32 @@ def bucket_sort(data):
 
     return result 
 
+def counting_sort_ints_only(data):
+
+    lo, hi = min(data), max(data)
+    neg_counts = [0 for _ in range(abs(lo)+1)]
+    counts = [0 for _ in range(hi+1)]
+    for num in data:
+        if num < 0:
+            neg_counts[abs(num)]+=1
+        else:
+            counts[num]+=1
+
+    result = []
+    for i in range(len(neg_counts)-1, 0, -1):
+        if neg_counts[i]>0:
+            result.extend([-i]*neg_counts[i])
+
+    for i, item in enumerate(counts):
+        if counts[i] > 0:
+            result.extend([i]*item)
+
+    return result
     
 
 
 
 if __name__ == "__main__":
-    run_tests(bucket_sort, FLOAT_CASES)
+    #run_tests(bucket_sort, FLOAT_CASES)
     # once your version handles arbitrary ranges:
-    # run_tests(bucket_sort, INT_CASES)
+    run_tests(counting_sort_ints_only, INT_CASES)

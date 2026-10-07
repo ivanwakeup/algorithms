@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flashcards</title>
+<style>
+  :root {
+    --bg: #f6f5f1; --card: #ffffff; --text: #1d1d1b; --muted: #77756f;
+    --border: #e3e1da; --accent: #3a5bd9; --code-bg: #f0eee8; --danger: #c0392b;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #161614; --card: #22221f; --text: #ecebe6; --muted: #9a988f;
+      --border: #34332f; --accent: #8aa2ff; --code-bg: #2c2b27; --danger: #ff7b6b;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh; background: var(--bg); color: var(--text);
+    font: 17px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    display: flex; flex-direction: column; align-items: center; padding: 40px 16px;
+  }
+  .card {
+    width: 100%; max-width: 680px; min-height: 340px; background: var(--card);
+    border: 1px solid var(--border); border-radius: 14px; padding: 32px;
+    cursor: pointer; user-select: text; display: flex; flex-direction: column;
+    box-shadow: 0 2px 10px rgba(0,0,0,.04);
+  }
+  .question { font-size: 1.2rem; font-weight: 600; }
+  .divider { border: 0; border-top: 1px dashed var(--border); margin: 24px 0; }
+  .answer { display: none; }
+  .card.revealed .answer { display: block; }
+  .hint { margin-top: auto; padding-top: 24px; color: var(--muted); font-size: .85rem; text-align: center; }
+  .card.revealed .hint { display: none; }
+  code { font: .88em ui-monospace, Menlo, monospace; background: var(--code-bg); padding: 1px 5px; border-radius: 4px; }
+  pre { background: var(--code-bg); padding: 12px 14px; border-radius: 8px; overflow-x: auto; }
+  pre code { background: none; padding: 0; }
+  .controls { display: flex; gap: 12px; align-items: center; margin-top: 20px; }
+  button {
+    font: inherit; font-size: .95rem; padding: 8px 18px; border-radius: 8px; cursor: pointer;
+    border: 1px solid var(--border); background: var(--card); color: var(--text);
+  }
+  button:hover { border-color: var(--accent); color: var(--accent); }
+  button.danger:hover { border-color: var(--danger); color: var(--danger); }
+  button.primary { background: var(--accent); border-color: var(--accent); color: var(--card); }
+  button.primary:hover { color: var(--card); opacity: .9; }
+  .editor { display: none; cursor: default; gap: 8px; }
+  body.editing .editor { display: flex; }
+  body.editing #card, body.editing .controls, body.editing > .keys { display: none; }
+  .editor label { font-size: .8rem; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
+  .editor textarea {
+    width: 100%; font: .9rem/1.5 ui-monospace, Menlo, monospace; color: var(--text);
+    background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; resize: vertical;
+  }
+  .editor textarea:focus { outline: none; border-color: var(--accent); }
+  .editor-actions { display: flex; gap: 10px; align-items: center; justify-content: flex-end; margin-top: 8px; }
+  .editor-actions .keys { margin: 0 auto 0 0; }
+  .count { color: var(--muted); font-size: .9rem; min-width: 70px; text-align: center; }
+  .keys { color: var(--muted); font-size: .8rem; margin-top: 14px; }
+</style>
+</head>
+<body>
+  <div class="card" id="card">
+    <div class="question" id="question">Loading…</div>
+    <div class="answer" id="answer-wrap">
+      <hr class="divider">
+      <div id="answer"></div>
+    </div>
+    <div class="hint">click to reveal</div>
+  </div>
+  <div class="controls">
+    <button id="prev">← Prev</button>
+    <span class="count" id="count"></span>
+    <button id="next">Next →</button>
+    <button id="shuffle">Shuffle</button>
+    <button id="edit">Edit</button>
+    <button id="delete" class="danger">Delete</button>
+  </div>
+  <div class="keys">space: reveal · ←/→: navigate</div>
+
+  <div class="card editor" id="editor">
+    <label for="edit-question">Front</label>
+    <textarea id="edit-question" rows="4"></textarea>
+    <label for="edit-answer">Back</label>
+    <textarea id="edit-answer" rows="12"></textarea>
+    <div class="editor-actions">
+      <span class="keys">⌘/Ctrl+Enter: save · Esc: cancel</span>
+      <button id="cancel-edit">Cancel</button>
+      <button id="save-edit" class="primary">Save</button>
+    </div>
+  </div>
+
+<script>
+  let cards = [], i = 0;
+  const $ = id => document.getElementById(id);
+
+  const escape = s => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+  // tiny markdown: ```code blocks```, `inline code`, **bold**, paragraphs
+  function render(text) {
+    const parts = escape(text).split(/```(?:\w+)?\n?([\s\S]*?)```/);
+    return parts.map((p, idx) => {
+      if (idx % 2) return `<pre><code>${p.replace(/\n$/, "")}</code></pre>`;
+      return p.trim().split(/\n{2,}/).filter(Boolean).map(para =>
+        "<p>" + para
+          .replace(/`([^`]+)`/g, "<code>$1</code>")
+          .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
+          .replace(/\n/g, "<br>") + "</p>"
+      ).join("");
+    }).join("");
+  }
+
+  function shuffle(arr) {
+    for (let j = arr.length - 1; j > 0; j--) {
+      const k = Math.floor(Math.random() * (j + 1));
+      [arr[j], arr[k]] = [arr[k], arr[j]];
+    }
+    return arr;
+  }
+
+  function show() {
+    if (!cards.length) { $("question").textContent = "No cards yet."; return; }
+    const c = cards[i];
+    $("card").classList.remove("revealed");
+    $("question").innerHTML = render(c.question);
+    $("answer").innerHTML = render(c.answer);
+    $("count").textContent = `${i + 1} / ${cards.length}`;
+  }
+
+  const go = d => { if (cards.length) { i = (i + d + cards.length) % cards.length; show(); } };
+
+  $("card").addEventListener("click", () => {
+    if (window.getSelection().toString()) return;  // don't flip when selecting text
+    $("card").classList.toggle("revealed");
+  });
+  $("next").onclick = () => go(1);
+  $("prev").onclick = () => go(-1);
+  $("shuffle").onclick = () => { shuffle(cards); i = 0; show(); };
+  $("delete").onclick = async () => {
+    if (!cards.length || !confirm("Delete this card permanently?")) return;
+    const res = await fetch(`/api/cards/${cards[i].id}`, { method: "DELETE" });
+    if (!res.ok) { alert("Delete failed"); return; }
+    cards.splice(i, 1);
+    if (i >= cards.length) i = 0;
+    if (cards.length) show();
+    else { $("question").textContent = "No cards yet."; $("answer").innerHTML = ""; $("count").textContent = ""; }
+  };
+  const editing = () => document.body.classList.contains("editing");
+
+  function openEditor() {
+    if (!cards.length) return;
+    $("edit-question").value = cards[i].question;
+    $("edit-answer").value = cards[i].answer;
+    document.body.classList.add("editing");
+    $("edit-question").focus();
+  }
+
+  const closeEditor = () => document.body.classList.remove("editing");
+
+  async function saveEdit() {
+    const question = $("edit-question").value, answer = $("edit-answer").value;
+    if (!question.trim() || !answer.trim()) { alert("Front and back can't be empty"); return; }
+    const res = await fetch(`/api/cards/${cards[i].id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ question, answer }),
+    });
+    if (!res.ok) { alert("Save failed: " + await res.text()); return; }
+    cards[i] = await res.json();
+    closeEditor();
+    show();
+    $("card").classList.add("revealed");  // show both sides so you can check the edit
+  }
+
+  $("edit").onclick = openEditor;
+  $("cancel-edit").onclick = closeEditor;
+  $("save-edit").onclick = saveEdit;
+
+  document.addEventListener("keydown", e => {
+    if (editing()) {
+      if (e.key === "Escape") closeEditor();
+      else if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) { e.preventDefault(); saveEdit(); }
+      return;
+    }
+    if (e.key === " ") { e.preventDefault(); $("card").classList.toggle("revealed"); }
+    else if (e.key === "ArrowRight") go(1);
+    else if (e.key === "ArrowLeft") go(-1);
+  });
+
+  fetch("/api/cards").then(r => r.json()).then(data => { cards = shuffle(data); show(); });
+</script>
+</body>
+</html>

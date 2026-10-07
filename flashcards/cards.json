@@ -1,0 +1,290 @@
+[
+  {
+    "question": "What are the two data structures at the core of almost every cache design, and what does each one do?",
+    "answer": "A **hashmap** for O(1) lookup by key, plus an **ordering structure** that cheaply answers \"who gets evicted next?\". The ordering must match the policy: recency for LRU, frequency for LFU, insertion time for FIFO, expiry time for TTL.",
+    "category": "caching",
+    "source": "algorithms/caching/CACHING_NOTES.md",
+    "id": "41c96b0a",
+    "created": "2026-10-06"
+  },
+  {
+    "question": "LRU vs FIFO: does a `get` move the key? What structure would you use?",
+    "answer": "**LRU:** yes, a read counts as a use, so `get` calls `move_to_end`. **FIFO:** no, position is insertion time only.\n\nBoth can use an `OrderedDict` (or a hashmap + doubly linked list) and evict from the front with `popitem(last=False)`.",
+    "category": "caching",
+    "source": "algorithms/caching/CACHING_NOTES.md",
+    "id": "78e78e07",
+    "created": "2026-10-06"
+  },
+  {
+    "question": "How does an LFU cache get O(1) for every operation instead of O(log n) with a heap?",
+    "answer": "Use **buckets keyed by frequency** (freq → doubly linked list of nodes) plus a `min_freq` pointer. You never compare frequencies, you index by them.\n\nIt works because a frequency only goes up by exactly 1, so an item always moves to the very next bucket. It's essentially bucket sort that stays sorted as items change.",
+    "category": "caching",
+    "source": "session: bucket sort in past work",
+    "id": "f4260087",
+    "created": "2026-10-06"
+  },
+  {
+    "question": "Bug hunt: an LFU `set` inserts the new key into the freq-1 bucket, *then* calls `evict()`. What goes wrong?",
+    "answer": "If every older key has been read at least once, the freq-1 bucket holds **only the new key**, so you evict the key you just added.\n\n```python\nc = SimpleLFUCache(cache_size=2)\nc.set('a',1); c.get('a')\nc.set('b',2); c.get('b')\nc.set('c',3)   # 'c' is gone\n```\nFix: evict **before** inserting when `key not in hm and len(hm) >= size`.",
+    "category": "caching",
+    "source": "session: bug in SimpleLFUCache",
+    "id": "0cf71cd7",
+    "created": "2026-10-06"
+  },
+  {
+    "question": "TTL caches: lazy vs active expiry. What does each guarantee, and what's the weakness of each?",
+    "answer": "**Lazy** (check on `get`): never returns dead data, but keys nobody reads stay in memory forever.\n\n**Active** (background sweep every N seconds): reclaims memory, but needs a thread, which means locking.\n\nUse both, like Redis does.",
+    "category": "caching",
+    "source": "algorithms/caching/CACHING_NOTES.md",
+    "id": "7c19d2b1",
+    "created": "2026-10-06"
+  },
+  {
+    "question": "Fixed vs sliding TTL expiration: when do you use each? What's the rule about ordering?",
+    "answer": "**Fixed:** clock starts at write. Use it for data that goes stale on a schedule (API responses). Redis `EXPIRE`.\n**Sliding:** clock restarts on every access. Use it for idle timeouts (sessions).\n\n**Rule: whatever you do to expiry, you do to position.** With sliding expiry, `get` must refresh `expires_at` **and** `move_to_end`. If you change one without the other, the ordering breaks and nothing raises an error.",
+    "category": "caching",
+    "source": "algorithms/caching/CACHING_NOTES.md",
+    "id": "99278c74",
+    "created": "2026-10-06"
+  },
+  {
+    "question": "Why can a TTL cache with the same TTL for every key use an `OrderedDict` for its sweep? What's the cost, and what's the gotcha on overwrite?",
+    "answer": "With one TTL for every key, insertion order = expiry order, so the sweep pops from the front until it hits the first fresh key: **O(number of expired keys)**.\n\n```python\nwhile self.hm and self._is_expired(next(iter(self.hm.values()))):\n    self.hm.popitem(last=False)\n```\nGotcha: overwriting an existing key in a dict does **not** move it. Call `move_to_end(key)`.",
+    "category": "caching",
+    "source": "algorithms/caching/caching.py TTLCache",
+    "id": "64e474ab",
+    "created": "2026-10-06"
+  },
+  {
+    "question": "With a per-key TTL (`SET k v EX 30`), why doesn't an OrderedDict work, and what do you use instead?",
+    "answer": "Insertion order no longer equals expiry order. Use a **min-heap of `(expires_at, key)`**.\n\nWhen a key is overwritten, its old heap entry goes stale. **Skip stale entries when you pop them** (lazy deletion): compare the popped `expires_at` against the current value in the hashmap.",
+    "category": "caching",
+    "source": "algorithms/caching/CACHING_NOTES.md",
+    "id": "9402ca76",
+    "created": "2026-10-06"
+  },
+  {
+    "question": "Why use `time.monotonic_ns()` instead of `time.time()` for expiry?",
+    "answer": "Wall-clock time can jump, even backwards (NTP sync, manual clock changes), which would make keys expire early or never. A monotonic clock only moves forward.",
+    "category": "caching",
+    "source": "algorithms/caching/CACHING_NOTES.md",
+    "id": "5fbdd8a2",
+    "created": "2026-10-06"
+  },
+  {
+    "question": "What is a cache stampede (thundering herd), and what are two mitigations?",
+    "answer": "A popular key expires, 1,000 requests miss at once, and all of them hit the database.\n\n- **Single-flight / per-key lock:** one request refreshes the key and the rest wait for it.\n- **TTL jitter:** add randomness to TTLs so keys don't all expire together.",
+    "category": "caching",
+    "source": "algorithms/caching/CACHING_NOTES.md",
+    "id": "f905a996",
+    "created": "2026-10-06"
+  },
+  {
+    "question": "Cache-aside vs write-through vs write-back: how does each work, and what's the trade-off?",
+    "answer": "**Cache-aside:** the app reads the DB on a miss and fills the cache. Most common; the first read is slow.\n**Write-through:** write the cache and the DB together. Consistent; slower writes.\n**Write-back:** write the cache, flush to the DB later. Fast; data is lost if the cache dies.",
+    "category": "caching",
+    "source": "algorithms/caching/CACHING_NOTES.md",
+    "id": "f45d19af",
+    "created": "2026-10-06"
+  },
+  {
+    "question": "Python operations like `key in d` and `d[key]` are each atomic. Why do you still need a lock around a `get`?",
+    "answer": "**Sequences** of operations aren't atomic (check-then-act):\n```\nserver:   key in self.hm   -> True\nsweeper:  popitem(...)     -> removes key\nserver:   self.hm[key]     -> KeyError\n```\nEven `next(iter(d))` can raise `RuntimeError: OrderedDict mutated during iteration`. Lock the whole logical operation, reads included.",
+    "category": "concurrency",
+    "source": "algorithms/caching/CACHING_NOTES.md",
+    "id": "a922a45c",
+    "created": "2026-10-06"
+  },
+  {
+    "question": "`put` does `with self._lock:` and then calls `self.evict()`, which also does `with self._lock:`. What happens, and what's the clean fix?",
+    "answer": "**Deadlock.** A plain `threading.Lock` isn't reentrant, so the same thread blocks forever waiting on itself.\n\nFix: **public methods take the lock; `_private` helpers never do** (they assume the caller already holds it). `RLock` also works, but the convention is cleaner.",
+    "category": "concurrency",
+    "source": "algorithms/caching/CACHING_NOTES.md",
+    "id": "80a9c1bc",
+    "created": "2026-10-06"
+  },
+  {
+    "question": "Why use `threading.Event().wait(interval)` instead of `time.sleep` in a background sweeper loop? And what does `daemon=True` do?",
+    "answer": "`Event.wait` can be **interrupted**. `close()` calls `stop.set()`, the loop exits right away, and you can `join()` the thread.\n```python\nwhile not self._stop.wait(self._interval):\n    self.cleanup()\n```\n`daemon=True` kills the thread abruptly when the process exits. That's fine for in-memory data, but objects you create and discard while the process keeps running (tests!) still need `close()`.\n\nAlso: never sleep while holding the lock.",
+    "category": "concurrency",
+    "source": "algorithms/caching/CACHING_NOTES.md",
+    "id": "f4c395ad",
+    "created": "2026-10-06"
+  },
+  {
+    "question": "Your socket server stores `SET foo bar` but `GET foo` from `nc` returns None. What are the two likely causes?",
+    "answer": "1. **The trailing newline:** `nc` sends `GET foo\\n`, which splits into `[\"GET\", \"foo\\n\"]`, so you look up the key `\"foo\\n\"`. Fix: `cmd.strip().split()`.\n2. **A new cache per connection:** creating the `TTLCache` inside the `accept()` loop wipes the data on every new client. Create it once, before the loop.",
+    "category": "networking",
+    "source": "session: cache_server returns None",
+    "id": "48b9c230",
+    "created": "2026-10-06"
+  },
+  {
+    "question": "Why is `data = sock.recv(1024)` the wrong way to read one command at a time?",
+    "answer": "TCP is a **byte stream**, not a message stream. `recv` can return part of a command or several commands at once.\n\nFor a line protocol, buffer until `\\n`, e.g. loop over `conn.makefile('r')` line by line.",
+    "category": "networking",
+    "source": "session: cache_server returns None",
+    "id": "493b3db3",
+    "created": "2026-10-06"
+  },
+  {
+    "question": "Why does `while True: print(sys.stdin.read())` spin and print blank lines forever?",
+    "answer": "`read()` reads **everything until EOF**. After EOF, every call returns `\"\"` right away, so the loop never blocks.\n\nTo keep listening, read line by line: `for line in sys.stdin:` (blocks for each line and ends on Ctrl-D).",
+    "category": "python",
+    "source": "session: cache_server stdin loop",
+    "id": "50cebffc",
+    "created": "2026-10-06"
+  },
+  {
+    "question": "`python algorithms/server/cache_server.py` fails with `attempted relative import with no known parent package`. Why, and how do you fix it?",
+    "answer": "Running a file directly makes it `__main__`, which belongs to no package, so `..` has nothing to refer to. Python also puts the **script's own folder** on `sys.path`, not the repo root.\n\nFixes:\n- Run it as a module from the repo root: `python -m algorithms.server.cache_server`\n- Use absolute imports (`from algorithms.caching.caching import TTLCache`) and install the project editable (`uv sync` / `uv pip install -e .`).",
+    "category": "python-packaging",
+    "source": "session: why doesn't import work",
+    "id": "55a0fff9",
+    "created": "2026-10-06"
+  },
+  {
+    "question": "Why did `uv sync` not install the `algorithms` package until `pyproject.toml` got a `[build-system]` section?",
+    "answer": "Without a build backend, uv treats the project as a plain (virtual) workspace and installs only its dependencies, not the project itself. Adding `[build-system]` (hatchling) makes it installable, and uv installs it **editable**, so code changes apply without reinstalling.",
+    "category": "python-packaging",
+    "source": "session: why doesn't import work",
+    "id": "20d1fc58",
+    "created": "2026-10-06"
+  },
+  {
+    "question": "Word Ladder: what's the key insight that turns it into a standard problem?",
+    "answer": "Words are **nodes** and one-letter differences are **edges**, so it's **shortest path in an unweighted graph**, which is BFS.\n\nThe graph isn't given; seeing it is the hard part. The answer counts words, not steps, so it starts at 1.",
+    "category": "graphs",
+    "source": "algorithms/graphs/netflix_prep.py",
+    "id": "8bb068cb",
+    "created": "2026-10-06"
+  },
+  {
+    "question": "In BFS, should you mark a node visited when you enqueue it or when you dequeue it? Why?",
+    "answer": "**When you enqueue it.** Otherwise the same node can be added to the queue several times from different parents before it's processed. Also seed `visited = {start}` so neighbors don't re-enqueue the start.",
+    "category": "graphs",
+    "source": "session: word ladder",
+    "id": "eac79426",
+    "created": "2026-10-06"
+  },
+  {
+    "question": "How does Python parse `if begin_word and end_word not in hm:`?",
+    "answer": "`begin_word and (end_word not in hm)`. `not in` binds tighter than `and`. It only \"works\" when `begin_word` is truthy. You meant `if end_word not in hm:`.",
+    "category": "python",
+    "source": "session: word ladder",
+    "id": "82fafec5",
+    "created": "2026-10-06"
+  },
+  {
+    "question": "Word Ladder with 100k words of length 5: how much work is the \"swap each letter a–z\" neighbor generation, and what's the faster alternative?",
+    "answer": "100,000 × 5 positions × 26 letters ≈ **13M candidate strings**, each built (O(L)) and hashed (O(L)) → O(N·L²·26). About 94% of lookups miss. Measured at ~4.5s.\n\n**Wildcard buckets:** map each pattern like `h*t` to a list of words. Neighbors are the words sharing a bucket: N·L patterns and no misses. Measured at ~0.26s.",
+    "category": "graphs",
+    "source": "session: word ladder performance",
+    "id": "a287fe1f",
+    "created": "2026-10-06"
+  },
+  {
+    "question": "Word Ladder II (all shortest paths): why does normal visited-on-enqueue drop valid answers, and what's the fix?",
+    "answer": "Two shortest paths can pass through the same word from different parents at the **same level**. Visited-on-enqueue blocks the second one.\n\nFix: mark visited **per level**. Collect `level_visited` and merge it into `visited` only after the whole level is done. Stop after the level where you first reach the end.",
+    "category": "graphs",
+    "source": "session: word ladder II",
+    "id": "e8a1a4ed",
+    "created": "2026-10-06"
+  },
+  {
+    "question": "Word Ladder II: why do backward parent links (not a doubly linked list) help, and what's the fully scalable version?",
+    "answer": "Paths share prefixes, so one `next` pointer can't represent branching. Each node points only to its **parent**, and extending a path is O(1) instead of copying a list.\n\nBut that's still one node per *partial path*, which can blow up exponentially. Full fix: **one entry per word with a set of parents** (`parents = defaultdict(set)`), then DFS/backtrack from the end word to rebuild every path.",
+    "category": "graphs",
+    "source": "session: word ladder II",
+    "id": "513abbf5",
+    "created": "2026-10-06"
+  },
+  {
+    "question": "Bucket sort on floats in [0, 1): how many buckets, how do you pick an item's bucket, and what's the expected time?",
+    "answer": "Use **n buckets** (n = len(data)), so each holds about 1 item on average. The bucket index is `int(x * n)`. Scatter, sort each bucket (insertion sort), then concatenate. **O(n) expected** for uniform input.",
+    "category": "sorting",
+    "source": "algorithms/sorting/bucketsort.py",
+    "id": "74789d82",
+    "created": "2026-10-06"
+  },
+  {
+    "question": "What's bucket sort's worst case, and what input triggers it?",
+    "answer": "**Clustered** input: everything lands in one bucket, so the per-bucket sort does all the work. With insertion sort that's **O(n²)**.",
+    "category": "sorting",
+    "source": "algorithms/sorting/bucketsort.py",
+    "id": "c9b55da6",
+    "created": "2026-10-06"
+  },
+  {
+    "question": "How do you generalize bucket sort to an arbitrary numeric range, and what edge case must you handle?",
+    "answer": "Compute `lo, hi = min(data), max(data)` and use `idx = int((x - lo) / (hi - lo) * (k - 1))`.\n\nEdge case: **`hi == lo`** (all identical) divides by zero, so special-case it.",
+    "category": "sorting",
+    "source": "session: bucket sort review",
+    "id": "c25f696a",
+    "created": "2026-10-06"
+  },
+  {
+    "question": "Insertion sort: what's the difference between swapping and shifting, and which is the textbook version?",
+    "answer": "**Shifting** (textbook): save `key = a[i]`, move larger elements right with `a[j+1] = a[j]`, then write `key` once into the gap.\n\n**Swapping** each step is also correct but does about 3× the writes.",
+    "category": "sorting",
+    "source": "algorithms/sorting/bucketsort.py",
+    "id": "5f761c7c",
+    "created": "2026-10-06"
+  },
+  {
+    "question": "Counting sort with negatives in a separate `neg_counts` array: what are the two pitfalls?",
+    "answer": "1. **`neg_counts[num]` with `num = -5`** silently uses Python's negative indexing (counting from the end). Use `neg_counts[-num]`.\n2. **Order:** walking `neg_counts` forward gives -1, -2, -3…. Ascending order needs the biggest magnitude first, so iterate the indexes in reverse: `for i in range(len(neg_counts)-1, 0, -1)`.\n\n(Simpler alternative: one array with an offset, `counts[x - lo]`.)",
+    "category": "sorting",
+    "source": "session: counting sort bugs",
+    "id": "ff91ab70",
+    "created": "2026-10-06"
+  },
+  {
+    "question": "Merge intervals: why sort by **start** and not by end?",
+    "answer": "Sorting by start guarantees that anything overlapping the current merged interval comes **next**, so one pass merges everything.\n\nSorted by end, a wide interval like `(1, 100)` lands last, after intervals that should have merged into it were already emitted.",
+    "category": "intervals",
+    "source": "algorithms/intervals/intervals.py",
+    "id": "b8f78159",
+    "created": "2026-10-06"
+  },
+  {
+    "question": "Insert interval into a sorted, non-overlapping list: what are the three phases?",
+    "answer": "1. Append every interval that **ends before** the new one starts.\n2. While intervals **overlap** the new one, merge into it (`min` start, `max` end). Then append the merged interval.\n3. Append the rest.\n\nO(n), no sorting needed.",
+    "category": "intervals",
+    "source": "algorithms/intervals/intervals.py",
+    "id": "9ccc0550",
+    "created": "2026-10-06"
+  },
+  {
+    "question": "Running median of a stream: what's the structure and the invariant?",
+    "answer": "**Two heaps:** a max-heap for the lower half and a min-heap for the upper half. Push to the correct side, then rebalance so their sizes differ by at most 1.\n\nMedian = the top of the larger heap, or the average of both tops when the sizes are equal. O(log n) per insert, O(1) to read.",
+    "category": "streaming",
+    "source": "algorithms/streaming/streaming.py",
+    "id": "280ad9ef",
+    "created": "2026-10-06"
+  },
+  {
+    "question": "Reservoir sampling (k items from a stream of unknown length): what's the algorithm?",
+    "answer": "Keep the first k items. For the i-th item (1-indexed, i > k), keep it with probability **k / i**, replacing a uniformly random slot.\n\nEvery item ends up in the sample with probability k/n, using O(k) memory.",
+    "category": "streaming",
+    "source": "algorithms/streaming/streaming.py",
+    "id": "3a79129c",
+    "created": "2026-10-06"
+  },
+  {
+    "question": "Top-k frequent in a stream with a regular heap: what's the problem when counts change, and what are two solutions?",
+    "answer": "A heap can't update an entry's priority in place, so old `(-count, key)` entries go **stale**.\n\n1. **Lazy deletion:** push a new entry on every update, and when popping, skip entries whose count doesn't match the hashmap.\n2. **Indexed priority queue** (e.g. `pqdict`): supports `pq[key] = new_priority` in O(log n) directly.",
+    "category": "streaming",
+    "source": "algorithms/streaming/streaming.py",
+    "id": "cad918ec",
+    "created": "2026-10-06"
+  },
+  {
+    "question": "Detect whether any user appears twice within a `window` seconds, given `(user, time)` events. What's the approach?",
+    "answer": "Group times by user (`defaultdict(list)`), sort each user's times, then check **adjacent** pairs: `t[i] - t[i-1] <= window`. If any pair is within the window, some pair is, since adjacent gaps are the smallest.\n\nIf the input is already sorted by time, a single pass storing each user's **last-seen time** is enough: O(n).",
+    "category": "hashing",
+    "source": "algorithms/netflix/practice.py",
+    "id": "7ffc78fd",
+    "created": "2026-10-06"
+  }
+]

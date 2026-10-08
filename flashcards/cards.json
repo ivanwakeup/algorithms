@@ -128,14 +128,6 @@
     "created": "2026-10-06"
   },
   {
-    "question": "BFS gives one shortest path. How do you recover **all** shortest paths?",
-    "answer": "1. **Mark visited per level**, not on enqueue: two shortest paths can pass through the same node from different parents at the same depth. Merge a `level_visited` set into `visited` only after the whole level is done.\n2. Record **every parent** of each node at that depth: `parents = defaultdict(set)`, one entry per node, not per path.\n3. Stop after the level where you first reach the target, then **DFS/backtrack** from the target through `parents` to rebuild the paths.\n\nStoring full paths in the queue (or one node per partial path) can blow up exponentially.",
-    "category": "graphs",
-    "source": "session: word ladder II",
-    "id": "513abbf5",
-    "created": "2026-10-06"
-  },
-  {
     "question": "Bucket sort on floats in [0, 1): how many buckets, how do you pick an item's bucket, and what's the expected time?",
     "answer": "Use **n buckets** (n = len(data)), so each holds about 1 item on average. The bucket index is `int(x * n)`. Scatter, sort each bucket (insertion sort), then concatenate. **O(n) expected** for uniform input.",
     "category": "sorting",
@@ -280,14 +272,6 @@
     "created": "2026-10-07"
   },
   {
-    "question": "On a stream, why can you bucket by **count** for top-k frequent, but not by **value** for top-k largest?",
-    "answer": "**Counts** need no range known in advance: each arrival raises one key's count by exactly **+1**, so a key always moves to the very next bucket, and buckets can be created as they're needed.\n\n**Values** need a known min/max to choose a bucket (`(x - lo) / (hi - lo)`), and a stream doesn't give you that. For top-k largest, use a size-k min-heap.",
-    "category": "streaming",
-    "source": "session: streaming top-k buckets",
-    "id": "b9b4f009",
-    "created": "2026-10-07"
-  },
-  {
     "question": "O(1)-update, O(k)-query streaming top-k frequent: what's the structure, and how do you know where a new count bucket goes without searching?",
     "answer": "A **doubly linked list of only the non-empty buckets**, sorted by count (highest at `head.next`), plus `key_to_node: key → bucket` (the bucket holds `.count`).\n\nWhen a key goes from c to c+1, look at the node **right above** bucket c. If its count isn't c+1, then c+1 doesn't exist, and it belongs **right there**. Integers have nothing between c and c+1. Unlink c if it's now empty.\n\nQuery: follow pointers from `head.next`. Every node has at least one key, so it's O(k).",
     "category": "streaming",
@@ -342,5 +326,13 @@
     "source": "algorithms/streaming/streaming.py median",
     "id": "6e722b06",
     "created": "2026-10-07"
+  },
+  {
+    "question": "Why don't filesystems allow a directory to have multiple parents (directory hard links)?",
+    "answer": "A single parent keeps the directory structure a **tree**: every directory has exactly one path to the root. With multiple parents:\n\n- **`cd ..` is ambiguous:** which parent do you go to?\n- **Deletes are ambiguous:** if B lives under both A and C, does `rm A/B` remove it from one branch or both?\n- **Cycles become possible:** a directory could end up inside its own subtree, so a recursive walk (`find`, `du`, `rm -r`) never finishes unless it tracks visited nodes.\n- **Reference counts can't free cycles:** a directory cycle keeps its own counts above zero, so it's never reclaimed.\n\nFiles *can* have hard links (multiple names), because files have no `..` and no children, so none of these problems apply. Symlinks are allowed for directories because they're just paths, and tools can choose not to follow them.\n\nThe transferable idea: **tree (one parent) vs DAG vs general graph**. Each step up loses a guarantee: a unique path, a well-defined parent, and no cycles.",
+    "category": "systems",
+    "source": "session: filesystem trees",
+    "id": "9efee08d",
+    "created": "2026-10-08"
   }
 ]

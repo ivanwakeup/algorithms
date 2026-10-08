@@ -3,7 +3,7 @@ from dataclasses import asdict
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
-from flashcards.store import delete_card, load_cards, set_current, update_card
+from flashcards.store import Card, add_cards, delete_card, load_cards, set_current, update_card
 
 INDEX_HTML = Path(__file__).parent / "static" / "index.html"
 
@@ -20,12 +20,21 @@ class Handler(BaseHTTPRequestHandler):
             self._send(404, "text/plain", b"not found")
 
     def do_POST(self):
-        # the page reports which card is on screen so Claude can look it up with `python -m flashcards current`
-        if self.path != "/api/current":
-            return self._send(404, "text/plain", b"not found")
         data = json.loads(self.rfile.read(int(self.headers.get("Content-Length", 0))))
-        set_current(data["id"])
-        self._send(204, "text/plain", b"")
+        if self.path == "/api/current":
+            # the page reports which card is on screen so Claude can look it up with `python -m flashcards current`
+            set_current(data["id"])
+            return self._send(204, "text/plain", b"")
+        if self.path != "/api/cards":
+            return self._send(404, "text/plain", b"not found")
+        try:
+            card = Card(question=data["question"], answer=data["answer"], category=data["category"].strip())
+            added = add_cards([card])
+        except (ValueError, KeyError, TypeError, AttributeError) as e:
+            return self._send(400, "text/plain", str(e).encode())
+        if not added:
+            return self._send(409, "text/plain", b"a card with that question already exists")
+        self._send(201, "application/json", json.dumps(asdict(card)).encode())
 
     def do_PUT(self):
         prefix = "/api/cards/"

@@ -49,11 +49,13 @@
   body.editing .editor { display: flex; }
   body.editing #card, body.editing .controls, body.editing > .keys { display: none; }
   .editor label { font-size: .8rem; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
-  .editor textarea {
+  .editor .new-only { display: none; }
+  .editor.creating .new-only { display: block; }
+  .editor textarea, .editor input {
     width: 100%; font: .9rem/1.5 ui-monospace, Menlo, monospace; color: var(--text);
     background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; resize: vertical;
   }
-  .editor textarea:focus { outline: none; border-color: var(--accent); }
+  .editor textarea:focus, .editor input:focus { outline: none; border-color: var(--accent); }
   .editor-actions { display: flex; gap: 10px; align-items: center; justify-content: flex-end; margin-top: 8px; }
   .editor-actions .keys { margin: 0 auto 0 0; }
   .count { color: var(--muted); font-size: .9rem; min-width: 70px; text-align: center; }
@@ -74,12 +76,16 @@
     <span class="count" id="count"></span>
     <button id="next">Next →</button>
     <button id="shuffle">Shuffle</button>
+    <button id="new">New</button>
     <button id="edit">Edit</button>
     <button id="delete" class="danger">Delete</button>
   </div>
   <div class="keys">space: reveal · ←/→: navigate</div>
 
   <div class="card editor" id="editor">
+    <label for="edit-category" class="new-only">Category</label>
+    <input id="edit-category" class="new-only" list="categories" autocomplete="off">
+    <datalist id="categories"></datalist>
     <label for="edit-question">Front</label>
     <textarea id="edit-question" rows="4"></textarea>
     <label for="edit-answer">Back</label>
@@ -149,10 +155,26 @@
   };
   const editing = () => document.body.classList.contains("editing");
 
+  let creating = false;  // the editor is shared: false = editing cards[i], true = making a new card
+
   function openEditor() {
     if (!cards.length) return;
+    creating = false;
+    $("editor").classList.remove("creating");
     $("edit-question").value = cards[i].question;
     $("edit-answer").value = cards[i].answer;
+    document.body.classList.add("editing");
+    $("edit-question").focus();
+  }
+
+  function openCreator() {
+    creating = true;
+    $("editor").classList.add("creating");
+    const categories = [...new Set(cards.map(c => c.category))].sort();
+    $("categories").replaceChildren(...categories.map(c => Object.assign(document.createElement("option"), { value: c })));
+    $("edit-category").value = cards.length ? cards[i].category : "";
+    $("edit-question").value = "";
+    $("edit-answer").value = "";
     document.body.classList.add("editing");
     $("edit-question").focus();
   }
@@ -161,19 +183,28 @@
 
   async function saveEdit() {
     const question = $("edit-question").value, answer = $("edit-answer").value;
+    const category = $("edit-category").value.trim();
     if (!question.trim() || !answer.trim()) { alert("Front and back can't be empty"); return; }
-    const res = await fetch(`/api/cards/${cards[i].id}`, {
-      method: "PUT",
+    if (creating && !category) { alert("Category can't be empty"); return; }
+    const res = await fetch(creating ? "/api/cards" : `/api/cards/${cards[i].id}`, {
+      method: creating ? "POST" : "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ question, answer }),
+      body: JSON.stringify(creating ? { question, answer, category } : { question, answer }),
     });
     if (!res.ok) { alert("Save failed: " + await res.text()); return; }
-    cards[i] = await res.json();
+    const card = await res.json();
+    if (creating) {
+      i = cards.length ? i + 1 : 0;
+      cards.splice(i, 0, card);  // show the new card right away, then carry on where you were
+    } else {
+      cards[i] = card;
+    }
     closeEditor();
     show();
     $("card").classList.add("revealed");  // show both sides so you can check the edit
   }
 
+  $("new").onclick = openCreator;
   $("edit").onclick = openEditor;
   $("cancel-edit").onclick = closeEditor;
   $("save-edit").onclick = saveEdit;

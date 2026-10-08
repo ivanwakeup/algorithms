@@ -230,5 +230,141 @@
     "source": "algorithms/netflix/practice.py",
     "id": "7ffc78fd",
     "created": "2026-10-06"
+  },
+  {
+    "question": "Can you compute an **exact** running median of a stream without storing every element?",
+    "answer": "**No.** An exact one-pass median needs Ω(n) memory (Munro & Paterson, 1980).\n\nAdversary argument: if you discard any element `x`, future values (very large or very small ones) can move the median to any rank, including x's. So every element must stay retrievable.\n\nThe two heaps are already optimal on memory; they just make updates O(log n). Compare the mean, which needs only a sum and a count: O(1).",
+    "category": "streaming",
+    "source": "session: running median memory",
+    "id": "46a03d15",
+    "created": "2026-10-07"
+  },
+  {
+    "question": "Median/percentiles on a stream: what are your options when you can't afford O(n) memory?",
+    "answer": "- **Small integer range** (ages, whole-ms latency): a count array, O(range) memory, the same idea as counting sort.\n- **Sliding window:** store only the last k values.\n- **Approximate:** sketches such as **t-digest**, **KLL** or **Greenwald-Khanna** give quantiles within a guaranteed error.\n- **Multiple passes** over stored data: Munro-Paterson, about O(n^(1/p)) memory for p passes.",
+    "category": "streaming",
+    "source": "session: running median memory",
+    "id": "99f1ff9a",
+    "created": "2026-10-07"
+  },
+  {
+    "question": "What is p99, in terms of sorted data? How does it relate to the median?",
+    "answer": "pX is the value at index `X/100 · n` of the sorted data, so X% of values are at or below it. The median is just **p50**.\n\nWith 1,000 sorted latencies, p50 ≈ index 500 and p99 ≈ index 990 (only 10 requests are slower).",
+    "category": "streaming",
+    "source": "session: p99",
+    "id": "9371eec5",
+    "created": "2026-10-07"
+  },
+  {
+    "question": "How do you adapt the two-heap running median to track a running p99?",
+    "answer": "Same structure, different rebalance rule: keep the **lower max-heap at ~99%** of the elements and the upper min-heap at ~1%. The top of the lower heap is p99.\n\nIt still stores everything, so it's still O(n) memory to be exact.",
+    "category": "streaming",
+    "source": "session: p99",
+    "id": "434d5c42",
+    "created": "2026-10-07"
+  },
+  {
+    "question": "Why do people watch p99 latency rather than the median?",
+    "answer": "Latency has a long tail, so p50 = 20ms can coexist with p99 = 800ms.\n\nOne user action often fans out to many backend calls. With 100 calls, the chance that at least one hits the p99 is `1 - 0.99^100 ≈ 63%`. So the \"1% case\" is what a typical user actually feels.",
+    "category": "system-design",
+    "source": "session: p99",
+    "id": "7994fa4b",
+    "created": "2026-10-07"
+  },
+  {
+    "question": "Is reservoir sampling part of t-digest? Why is t-digest better for estimating p99?",
+    "answer": "**No.** Reservoir sampling keeps k random **real elements**, so its error is about the same at every rank. With k=1,000, only ~10 samples sit above p99, so the tails are poor.\n\n**t-digest** keeps `(mean, count)` **centroids** whose size limit depends on rank: big near the median, tiny near the tails. It spends memory where the values are spread out and the accuracy matters. It's also deterministic and **mergeable** across machines.\n\n(KLL is the sketch closer to sampling: it repeatedly keeps every other element of a sorted buffer, starting at a random offset.)",
+    "category": "streaming",
+    "source": "session: t-digest vs reservoir",
+    "id": "bc468697",
+    "created": "2026-10-07"
+  },
+  {
+    "question": "Top-K largest of n values: compare the approaches and their runtimes. Is O(n log n) the best you can do?",
+    "answer": "**No.** You must read every element, so the floor is O(n), and you can reach it.\n\n- Sort: O(n log n)\n- **Min-heap of size k:** O(n log k). Works on a stream with O(k) memory. The usual interview answer.\n- Heapify everything, pop k: O(n + k log n)\n- **Quickselect:** O(n) average (O(n) worst case with median-of-medians), + O(k log k) if the result must be sorted. Doesn't work on a stream.",
+    "category": "heaps",
+    "source": "session: top-k complexity",
+    "id": "d16dd1ff",
+    "created": "2026-10-07"
+  },
+  {
+    "question": "Top-K **most frequent** elements in O(n), with no heap: how?",
+    "answer": "1. Count with a hashmap: O(n).\n2. **Bucket sort by count:** `buckets[c]` holds the keys that appear c times. No count exceeds n, so there are at most n+1 buckets.\n3. Walk from the highest bucket down until you have k keys.\n\nO(n) total.",
+    "category": "sorting",
+    "source": "session: top-k complexity",
+    "id": "143413f3",
+    "created": "2026-10-07"
+  },
+  {
+    "question": "On a stream, why can you bucket by **count** for top-k frequent, but not by **value** for top-k largest?",
+    "answer": "**Counts** need no range known in advance: each arrival raises one key's count by exactly **+1**, so a key always moves to the very next bucket, and buckets can be created as they're needed.\n\n**Values** need a known min/max to choose a bucket (`(x - lo) / (hi - lo)`), and a stream doesn't give you that. For top-k largest, use a size-k min-heap.",
+    "category": "streaming",
+    "source": "session: streaming top-k buckets",
+    "id": "b9b4f009",
+    "created": "2026-10-07"
+  },
+  {
+    "question": "Streaming top-k with `buckets = defaultdict(set)` keyed by count, querying by `highest = max_seen; highest -= 1` until you have k keys. What's the query cost?",
+    "answer": "**O(k + gap)**, not O(k). It visits every count between the max and the k-th key, **including counts no key has**.\n\nOne hot key with 20,000 hits followed by 2,000 distinct keys took ~2.9s. The linked-bucket version took 0.011s.\n\nBonus bug: reading `hm[highest]` on a `defaultdict` **inserts** an empty set for each missing count, and memory grows.",
+    "category": "streaming",
+    "source": "algorithms/streaming/streaming.py top_k_from_stream_count_buckets",
+    "id": "76befd21",
+    "created": "2026-10-07"
+  },
+  {
+    "question": "O(1)-update, O(k)-query streaming top-k frequent: what's the structure, and how do you know where a new count bucket goes without searching?",
+    "answer": "A **doubly linked list of only the non-empty buckets**, sorted by count (highest at `head.next`), plus `key_to_node: key → bucket` (the bucket holds `.count`).\n\nWhen a key goes from c to c+1, look at the node **right above** bucket c. If its count isn't c+1, then c+1 doesn't exist, and it belongs **right there**. Integers have nothing between c and c+1. Unlink c if it's now empty.\n\nQuery: follow pointers from `head.next`. Every node has at least one key, so it's O(k).",
+    "category": "streaming",
+    "source": "session: linked bucket list",
+    "id": "bb3882d6",
+    "created": "2026-10-07"
+  },
+  {
+    "question": "When do you need a heap for priorities, and when can a bucket linked list give you O(1)?",
+    "answer": "**Heap:** when priorities can change **by any amount**. The changed item could belong anywhere, so finding its spot costs O(log n).\n\n**Bucket list:** when priorities change by **exactly ±1**. The new spot is always next door, so it's O(1). That's why LFU and streaming top-k frequent can both be O(1).",
+    "category": "heaps",
+    "source": "session: linked bucket list",
+    "id": "885446ff",
+    "created": "2026-10-07"
+  },
+  {
+    "question": "LFU uses a doubly linked list **inside** each frequency bucket. Does streaming top-k frequent need one too?",
+    "answer": "**No.** In LFU the inner list breaks ties by recency (among keys with the same count, evict the least recently used). Top-k has no such tie-break, so a plain `set` of keys per bucket is enough. That leaves **one** DLL, the one linking the buckets.",
+    "category": "streaming",
+    "source": "session: linked bucket list",
+    "id": "af9d4c72",
+    "created": "2026-10-07"
+  },
+  {
+    "question": "Your DLL container only has `insert_node(node, front=False)`. What primitive should it have instead, and why?",
+    "answer": "`insert_after(anchor, node)`:\n```python\nnxt = anchor.next\nanchor.next = node; node.prev = anchor\nnode.next = nxt;    nxt.prev = node\n```\nFront and back are just `insert_after(head, n)` and `insert_after(tail.prev, n)`. Middle inserts (like creating bucket c+1 next to c) then need no manual pointer work.\n\nAlso use **sentinel** head/tail nodes so you never need `None` checks.",
+    "category": "data-structures",
+    "source": "session: DLL container",
+    "id": "7638c5ae",
+    "created": "2026-10-07"
+  },
+  {
+    "question": "Hashmap + doubly linked list structures (LRU, LFU, linked-bucket top-k): what invariants should you check, and what are the classic bugs?",
+    "answer": "Invariants: the list order is correct, there are no empty buckets, and the hashmap points at the node that actually contains the key.\n\nClassic bugs:\n- Forgetting to unlink an empty bucket, so you walk through empties again.\n- Forgetting to update the hashmap, so the next arrival removes the key from the wrong node.\n- Unlinking the old node **before** inserting its neighbour, which loses your reference point. Insert first, unlink last.\n- Removing a node from the list but not from a `count → bucket` dict, or the reverse.",
+    "category": "data-structures",
+    "source": "session: DLL container",
+    "id": "429a2621",
+    "created": "2026-10-07"
+  },
+  {
+    "question": "What's the side effect of `d[x]` when `d` is a `defaultdict`? How do you read it without that?",
+    "answer": "Reading a missing key **inserts** `d[x] = default_factory()`. Walking `buckets[c]` for many counts quietly fills the dict with empty sets.\n\nUse `d.get(x, ())` to read without inserting, and `del d[x]` once a bucket empties.",
+    "category": "python",
+    "source": "session: top-k review",
+    "id": "abbbe7b2",
+    "created": "2026-10-07"
+  },
+  {
+    "question": "Running median with an even count: what's wrong with `(max_h[0] + min_h[0]) // 2`?",
+    "answer": "`//` is **floor division**: the middle values 2 and 3 give `2` instead of `2.5` (and negative values round toward -∞). Use `/ 2`.",
+    "category": "python",
+    "source": "algorithms/streaming/streaming.py median",
+    "id": "6e722b06",
+    "created": "2026-10-07"
   }
 ]

@@ -16,14 +16,6 @@
     "created": "2026-10-06"
   },
   {
-    "question": "Bug hunt: an LFU `set` inserts the new key into the freq-1 bucket, *then* calls `evict()`. What goes wrong?",
-    "answer": "If every older key has been read at least once, the freq-1 bucket holds **only the new key**, so you evict the key you just added.\n\n```python\nc = SimpleLFUCache(cache_size=2)\nc.set('a',1); c.get('a')\nc.set('b',2); c.get('b')\nc.set('c',3)   # 'c' is gone\n```\nFix: evict **before** inserting when `key not in hm and len(hm) >= size`.",
-    "category": "caching",
-    "source": "session: bug in SimpleLFUCache",
-    "id": "0cf71cd7",
-    "created": "2026-10-06"
-  },
-  {
     "question": "TTL caches: lazy vs active expiry. What does each guarantee, and what's the weakness of each?",
     "answer": "**Lazy** (check on `get`): never returns dead data, but keys nobody reads stay in memory forever.\n\n**Active** (background sweep every N seconds): reclaims memory, but needs a thread, which means locking.\n\nUse both, like Redis does.",
     "category": "caching",
@@ -80,8 +72,8 @@
     "created": "2026-10-06"
   },
   {
-    "question": "`put` does `with self._lock:` and then calls `self.evict()`, which also does `with self._lock:`. What happens, and what's the clean fix?",
-    "answer": "**Deadlock.** A plain `threading.Lock` isn't reentrant, so the same thread blocks forever waiting on itself.\n\nFix: **public methods take the lock; `_private` helpers never do** (they assume the caller already holds it). `RLock` also works, but the convention is cleaner.",
+    "question": "A method holding a `threading.Lock` calls a helper that also acquires the same lock. What happens, and what's the clean design rule?",
+    "answer": "**Deadlock.** A plain `Lock` isn't reentrant, so the thread blocks forever waiting on itself.\n\nRule: **public methods take the lock; `_private` helpers never do** (they assume the caller already holds it). `RLock` also works, but the convention keeps the lock boundaries obvious.",
     "category": "concurrency",
     "source": "algorithms/caching/CACHING_NOTES.md",
     "id": "80a9c1bc",
@@ -104,8 +96,8 @@
     "created": "2026-10-06"
   },
   {
-    "question": "Word Ladder: what's the key insight that turns it into a standard problem?",
-    "answer": "Words are **nodes** and one-letter differences are **edges**, so it's **shortest path in an unweighted graph**, which is BFS.\n\nThe graph isn't given; seeing it is the hard part. The answer counts words, not steps, so it starts at 1.",
+    "question": "\"Fewest steps to turn A into B, where each step makes one small change\" (word ladder, lock combos, gene mutation). What's the pattern?",
+    "answer": "It's an **implicit graph**: states are **nodes**, and one allowed change is an **edge**. Fewest steps = **shortest path in an unweighted graph** = **BFS**.\n\nThe graph isn't given, so recognising it is the hard part. Decide whether the answer counts states or steps; they're off by one.",
     "category": "graphs",
     "source": "algorithms/graphs/netflix_prep.py",
     "id": "8bb068cb",
@@ -120,24 +112,24 @@
     "created": "2026-10-06"
   },
   {
-    "question": "How does Python parse `if begin_word and end_word not in hm:`?",
-    "answer": "`begin_word and (end_word not in hm)`. `not in` binds tighter than `and`. It only \"works\" when `begin_word` is truthy. You meant `if end_word not in hm:`.",
+    "question": "Python precedence: how does `a and b not in c` group? Where do comparisons sit relative to `not`/`and`/`or`?",
+    "answer": "`a and (b not in c)`. **Comparisons** (`in`, `not in`, `is`, `==`, `<`…) bind tighter than `not`, which binds tighter than `and`, which binds tighter than `or`.\n\nSo `x and y in s` does **not** mean \"x and y are both in s\". Write `x in s and y in s`, or `{x, y} <= s`.",
     "category": "python",
     "source": "session: word ladder",
     "id": "82fafec5",
     "created": "2026-10-06"
   },
   {
-    "question": "Word Ladder with 100k words of length 5: how much work is the \"swap each letter a–z\" neighbor generation, and what's the faster alternative?",
-    "answer": "100,000 × 5 positions × 26 letters ≈ **13M candidate strings**, each built (O(L)) and hashed (O(L)) → O(N·L²·26). About 94% of lookups miss. Measured at ~4.5s.\n\n**Wildcard buckets:** map each pattern like `h*t` to a list of words. Neighbors are the words sharing a bucket: N·L patterns and no misses. Measured at ~0.26s.",
+    "question": "Implicit graph where two strings are neighbours if they differ by one character. What are two ways to find neighbours, and what does each cost?",
+    "answer": "**Generate candidates:** for each position, try all 26 letters and check a set. N·L·26 lookups, each costing O(L) to build and hash, and most of them miss.\n\n**Wildcard buckets:** map each pattern (`h*t`, `*it`, `hi*`) to its words. Neighbours are the words that share a bucket. N·L patterns and no wasted lookups.\n\nThe general idea is to **index by a shared key** instead of testing every candidate. With 100k five-letter words it was about 17× faster.",
     "category": "graphs",
     "source": "session: word ladder performance",
     "id": "a287fe1f",
     "created": "2026-10-06"
   },
   {
-    "question": "Word Ladder II: why do backward parent links (not a doubly linked list) help, and what's the fully scalable version?",
-    "answer": "Paths share prefixes, so one `next` pointer can't represent branching. Each node points only to its **parent**, and extending a path is O(1) instead of copying a list.\n\nBut that's still one node per *partial path*, which can blow up exponentially. Full fix: **one entry per word with a set of parents** (`parents = defaultdict(set)`), then DFS/backtrack from the end word to rebuild every path.",
+    "question": "BFS gives one shortest path. How do you recover **all** shortest paths?",
+    "answer": "1. **Mark visited per level**, not on enqueue: two shortest paths can pass through the same node from different parents at the same depth. Merge a `level_visited` set into `visited` only after the whole level is done.\n2. Record **every parent** of each node at that depth: `parents = defaultdict(set)`, one entry per node, not per path.\n3. Stop after the level where you first reach the target, then **DFS/backtrack** from the target through `parents` to rebuild the paths.\n\nStoring full paths in the queue (or one node per partial path) can blow up exponentially.",
     "category": "graphs",
     "source": "session: word ladder II",
     "id": "513abbf5",
@@ -160,14 +152,6 @@
     "created": "2026-10-06"
   },
   {
-    "question": "How do you generalize bucket sort to an arbitrary numeric range, and what edge case must you handle?",
-    "answer": "Compute `lo, hi = min(data), max(data)` and use `idx = int((x - lo) / (hi - lo) * (k - 1))`.\n\nEdge case: **`hi == lo`** (all identical) divides by zero, so special-case it.",
-    "category": "sorting",
-    "source": "session: bucket sort review",
-    "id": "c25f696a",
-    "created": "2026-10-06"
-  },
-  {
     "question": "Insertion sort: what's the difference between swapping and shifting, and which is the textbook version?",
     "answer": "**Shifting** (textbook): save `key = a[i]`, move larger elements right with `a[j+1] = a[j]`, then write `key` once into the gap.\n\n**Swapping** each step is also correct but does about 3× the writes.",
     "category": "sorting",
@@ -176,8 +160,8 @@
     "created": "2026-10-06"
   },
   {
-    "question": "Counting sort with negatives in a separate `neg_counts` array: what are the two pitfalls?",
-    "answer": "1. **`neg_counts[num]` with `num = -5`** silently uses Python's negative indexing (counting from the end). Use `neg_counts[-num]`.\n2. **Order:** walking `neg_counts` forward gives -1, -2, -3…. Ascending order needs the biggest magnitude first, so iterate the indexes in reverse: `for i in range(len(neg_counts)-1, 0, -1)`.\n\n(Simpler alternative: one array with an offset, `counts[x - lo]`.)",
+    "question": "Counting sort with negative numbers: how do you handle them?",
+    "answer": "Use **one array with an offset**: size `hi - lo + 1`, count with `counts[x - lo] += 1`, and output index `i` as the value `i + lo`. That also handles any range that doesn't start at 0.\n\nPython trap: `arr[-5]` doesn't raise an error. It silently counts from the end, so a negative value used directly as an index gives wrong output with no crash.",
     "category": "sorting",
     "source": "session: counting sort bugs",
     "id": "ff91ab70",
@@ -304,14 +288,6 @@
     "created": "2026-10-07"
   },
   {
-    "question": "Streaming top-k with `buckets = defaultdict(set)` keyed by count, querying by `highest = max_seen; highest -= 1` until you have k keys. What's the query cost?",
-    "answer": "**O(k + gap)**, not O(k). It visits every count between the max and the k-th key, **including counts no key has**.\n\nOne hot key with 20,000 hits followed by 2,000 distinct keys took ~2.9s. The linked-bucket version took 0.011s.\n\nBonus bug: reading `hm[highest]` on a `defaultdict` **inserts** an empty set for each missing count, and memory grows.",
-    "category": "streaming",
-    "source": "algorithms/streaming/streaming.py top_k_from_stream_count_buckets",
-    "id": "76befd21",
-    "created": "2026-10-07"
-  },
-  {
     "question": "O(1)-update, O(k)-query streaming top-k frequent: what's the structure, and how do you know where a new count bucket goes without searching?",
     "answer": "A **doubly linked list of only the non-empty buckets**, sorted by count (highest at `head.next`), plus `key_to_node: key → bucket` (the bucket holds `.count`).\n\nWhen a key goes from c to c+1, look at the node **right above** bucket c. If its count isn't c+1, then c+1 doesn't exist, and it belongs **right there**. Integers have nothing between c and c+1. Unlink c if it's now empty.\n\nQuery: follow pointers from `head.next`. Every node has at least one key, so it's O(k).",
     "category": "streaming",
@@ -336,8 +312,8 @@
     "created": "2026-10-07"
   },
   {
-    "question": "Your DLL container only has `insert_node(node, front=False)`. What primitive should it have instead, and why?",
-    "answer": "`insert_after(anchor, node)`:\n```python\nnxt = anchor.next\nanchor.next = node; node.prev = anchor\nnode.next = nxt;    nxt.prev = node\n```\nFront and back are just `insert_after(head, n)` and `insert_after(tail.prev, n)`. Middle inserts (like creating bucket c+1 next to c) then need no manual pointer work.\n\nAlso use **sentinel** head/tail nodes so you never need `None` checks.",
+    "question": "Designing a doubly linked list class: what insert primitive should it expose, and what makes it easy to get right?",
+    "answer": "`insert_after(anchor, node)`:\n```python\nnxt = anchor.next\nanchor.next = node; node.prev = anchor\nnode.next = nxt;    nxt.prev = node\n```\nFront and back are just `insert_after(head, n)` and `insert_after(tail.prev, n)`, and inserting in the middle comes free.\n\nUse **sentinel** head/tail nodes so you never need `None` checks, and stop loops with `node is not tail`.",
     "category": "data-structures",
     "source": "session: DLL container",
     "id": "7638c5ae",
@@ -360,8 +336,8 @@
     "created": "2026-10-07"
   },
   {
-    "question": "Running median with an even count: what's wrong with `(max_h[0] + min_h[0]) // 2`?",
-    "answer": "`//` is **floor division**: the middle values 2 and 3 give `2` instead of `2.5` (and negative values round toward -∞). Use `/ 2`.",
+    "question": "Python: `/` vs `//`, and how does `//` round negative numbers?",
+    "answer": "`/` is true division and always returns a float (`5 / 2 == 2.5`). `//` is **floor** division: it rounds toward -∞, so `5 // 2 == 2` but `-7 // 2 == -4`, not -3.\n\nUse `/` for averages (e.g. a median of two middle values). Use `int(a / b)` if you need to truncate toward zero, as C and Java do.",
     "category": "python",
     "source": "algorithms/streaming/streaming.py median",
     "id": "6e722b06",

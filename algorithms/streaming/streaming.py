@@ -201,17 +201,18 @@ def top_k_from_stream_count_buckets(stream, k):
 
 class StreamItemNode:
 
-    def __init__(self, key, count):
+    def __init__(self, key, count, sentinel=False):
         self.key = key
         self.count = count
         self.next = None
         self.prev = None
+        self.sentinel = sentinel
 
 class DLLContainer:
 
     def __init__(self):
-        self.head = StreamItemNode(None, None, 0)
-        self.tail = StreamItemNode(None, None, 0)
+        self.head = StreamItemNode(None, None, True)
+        self.tail = StreamItemNode(None, None, True)
         self.head.next = self.tail
         self.tail.prev = self.head
         self.len = 0
@@ -246,43 +247,74 @@ class DLLContainer:
         after.next = node
         self.len+=1
 
+    def insert_before(self, node, before):
+        prev = before.prev
+        prev.next = node
+        node.next = before
+        before.prev = node
+        node.prev = prev
+        self.len+=1
+
 
 class BucketNode:
 
-    def __init__(self, count):
+    def __init__(self, count, sentinel=False):
         self.count = count
         #this needs to be a StreamItemNodeContainer
         self.item_list: DLLContainer = DLLContainer()
         self.next = None
         self.prev = None
+        self.sentinel = sentinel
 
 
 
 def top_k_from_stream_dlls(stream, k):
     seen = {}
     buckets = {}
-    buckets[1] = BucketNode(1)
+    
     bucketDLL = DLLContainer()
-    bucketDLL.insert_node(buckets[1])
+
     for key in stream:
         if not key in seen:
             new_item = StreamItemNode(key, 1)
             seen[key] = new_item
+            if 1 not in buckets:
+                buckets[1] = BucketNode(1)
+                bucketDLL.insert_node(buckets[1])
             buckets[1].item_list.insert_node(new_item)
         else:
             node = seen[key]
             new_count = node.count + 1
-            buckets[node.count].item_list.remove_node(node)
+            old_count = node.count
+            buckets[old_count].item_list.remove_node(node)
             if new_count not in buckets:
                 bucket_node = BucketNode(new_count)
                 buckets[new_count] = bucket_node
-                bucketDLL.insert_after(bucket_node, buckets[node.count])
+                bucketDLL.insert_before(bucket_node, buckets[old_count])
 
-            bucketDLL.remove_node(buckets[node.count])
-            if buckets[node.count].item_list.len == 0:
-                del buckets[node.count]
-            buckets[new_count].item_list.add_node(node)
-            node.count+=1
+            
+            if buckets[old_count].item_list.len == 0:
+                bucketDLL.remove_node(buckets[old_count])
+                del buckets[old_count]
+            buckets[new_count].item_list.insert_node(node)
+            node.count = new_count
+
+        items = 0
+        result = []
+        start = bucketDLL.head
+        while start.next and items < k:
+            start = start.next
+            if start.sentinel:
+                break
+            start_item = start.item_list.head
+            while start_item.next and items < k:
+                start_item = start_item.next
+                if start_item.sentinel:
+                    break
+                result.append(start_item.key)
+                items+=1
+        yield result 
+
 
 
 

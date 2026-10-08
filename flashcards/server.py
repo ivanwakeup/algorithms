@@ -3,7 +3,7 @@ from dataclasses import asdict
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
-from flashcards.store import delete_card, load_cards, update_card
+from flashcards.store import delete_card, load_cards, set_current, update_card
 
 INDEX_HTML = Path(__file__).parent / "static" / "index.html"
 
@@ -18,6 +18,14 @@ class Handler(BaseHTTPRequestHandler):
             self._send(200, "application/json", body)
         else:
             self._send(404, "text/plain", b"not found")
+
+    def do_POST(self):
+        # the page reports which card is on screen so Claude can look it up with `python -m flashcards current`
+        if self.path != "/api/current":
+            return self._send(404, "text/plain", b"not found")
+        data = json.loads(self.rfile.read(int(self.headers.get("Content-Length", 0))))
+        set_current(data["id"])
+        self._send(204, "text/plain", b"")
 
     def do_PUT(self):
         prefix = "/api/cards/"
@@ -43,6 +51,7 @@ class Handler(BaseHTTPRequestHandler):
         self.send_response(status)
         self.send_header("Content-Type", content_type)
         self.send_header("Content-Length", str(len(body)))
+        self.send_header("Cache-Control", "no-store")  # so a refresh always picks up UI changes
         self.end_headers()
         self.wfile.write(body)
 

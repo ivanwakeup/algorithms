@@ -64,7 +64,7 @@ def compute_stream_statistics(number_stream):
             heapq.heappush_max(max_h, heapq.heappop(min_h))
 
         if len(max_h) == len(min_h):
-            median = (max_h[0] + min_h[0]) // 2
+            median = (max_h[0] + min_h[0]) / 2
         elif len(max_h) > len(min_h):
             median = max_h[0]
         else:
@@ -163,8 +163,145 @@ def top_k_elements_indexed_pq(stream, k):
         yield [x[0] for x in result]
 
 
-for item in top_k_elements_indexed_pq(RandomNumberStream(1, 100), 3):
-    print(item)
+from collections import defaultdict
+def top_k_from_stream_count_buckets(stream, k):
+    hm = defaultdict(set)
+    seen = {}
+    max_seen = 1
+    for item in stream:
+        if item not in seen:
+            seen[item] = 1
+            hm[1].add(item)
+        else:
+            count = seen[item]
+            hm[count].remove(item)
+            if not hm[count]:
+                del hm[count]
+            hm[count+1].add(item)
+            seen[item]+=1
+            max_seen = max(max_seen, seen[item])
+
+        if len(seen) <= k:
+            yield list(seen)
+        else:
+            result = []
+            highest = max_seen
+            added_count = 0
+            while added_count < k:
+                nxt = hm[highest]
+                for key in nxt:
+                    result.append(key)
+                    added_count+=1
+                    if added_count==k:
+                        break
+                highest-=1
+            yield result
+
+
+
+class StreamItemNode:
+
+    def __init__(self, key, count):
+        self.key = key
+        self.count = count
+        self.next = None
+        self.prev = None
+
+class DLLContainer:
+
+    def __init__(self):
+        self.head = StreamItemNode(None, None, 0)
+        self.tail = StreamItemNode(None, None, 0)
+        self.head.next = self.tail
+        self.tail.prev = self.head
+        self.len = 0
+
+    def insert_node(self, node, front=False):
+        if front:
+            next = self.head.next
+            self.head.next = node
+            node.next = next
+            next.prev = node
+            node.prev = self.head
+        else:
+            prev = self.tail.prev
+            prev.next = node
+            node.next = self.tail
+            self.tail.prev = node
+            node.prev = prev
+        self.len+=1
+
+    def remove_node(self, node):
+        prev = node.prev
+        next = node.next
+        prev.next = next
+        next.prev = prev
+        self.len-=1
+
+    def insert_after(self, node, after):
+        next = after.next
+        node.prev = after
+        node.next = next
+        next.prev = node
+        after.next = node
+        self.len+=1
+
+
+class BucketNode:
+
+    def __init__(self, count):
+        self.count = count
+        #this needs to be a StreamItemNodeContainer
+        self.item_list: DLLContainer = DLLContainer()
+        self.next = None
+        self.prev = None
+
+
+
+def top_k_from_stream_dlls(stream, k):
+    seen = {}
+    buckets = {}
+    buckets[1] = BucketNode(1)
+    bucketDLL = DLLContainer()
+    bucketDLL.insert_node(buckets[1])
+    for key in stream:
+        if not key in seen:
+            new_item = StreamItemNode(key, 1)
+            seen[key] = new_item
+            buckets[1].item_list.insert_node(new_item)
+        else:
+            node = seen[key]
+            new_count = node.count + 1
+            buckets[node.count].item_list.remove_node(node)
+            if new_count not in buckets:
+                bucket_node = BucketNode(new_count)
+                buckets[new_count] = bucket_node
+                bucketDLL.insert_after(bucket_node, buckets[node.count])
+
+            bucketDLL.remove_node(buckets[node.count])
+            if buckets[node.count].item_list.len == 0:
+                del buckets[node.count]
+            buckets[new_count].item_list.add_node(node)
+            node.count+=1
+
+
+
+
+            
+
+
+            
+
+            
+
+
+
+        
+
+
+        
+
+        
 
 
 

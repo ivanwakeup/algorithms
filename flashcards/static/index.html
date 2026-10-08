@@ -126,6 +126,7 @@
     $("question").innerHTML = render(c.question);
     $("answer").innerHTML = render(c.answer);
     $("count").textContent = `${i + 1} / ${cards.length}`;
+    fetch("/api/current", { method: "POST", body: JSON.stringify({ id: c.id }) }).catch(() => {});
   }
 
   const go = d => { if (cards.length) { i = (i + d + cards.length) % cards.length; show(); } };

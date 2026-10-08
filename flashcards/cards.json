@@ -1,13 +1,5 @@
 [
   {
-    "question": "What are the two data structures at the core of almost every cache design, and what does each one do?",
-    "answer": "A **hashmap** for O(1) lookup by key, plus an **ordering structure** that cheaply answers \"who gets evicted next?\". The ordering must match the policy: recency for LRU, frequency for LFU, insertion time for FIFO, expiry time for TTL.",
-    "category": "caching",
-    "source": "algorithms/caching/CACHING_NOTES.md",
-    "id": "41c96b0a",
-    "created": "2026-10-06"
-  },
-  {
     "question": "LRU vs FIFO: does a `get` move the key? What structure would you use?",
     "answer": "**LRU:** yes, a read counts as a use, so `get` calls `move_to_end`. **FIFO:** no, position is insertion time only.\n\nBoth can use an `OrderedDict` (or a hashmap + doubly linked list) and evict from the front with `popitem(last=False)`.",
     "category": "caching",
@@ -88,14 +80,6 @@
     "created": "2026-10-06"
   },
   {
-    "question": "Python operations like `key in d` and `d[key]` are each atomic. Why do you still need a lock around a `get`?",
-    "answer": "**Sequences** of operations aren't atomic (check-then-act):\n```\nserver:   key in self.hm   -> True\nsweeper:  popitem(...)     -> removes key\nserver:   self.hm[key]     -> KeyError\n```\nEven `next(iter(d))` can raise `RuntimeError: OrderedDict mutated during iteration`. Lock the whole logical operation, reads included.",
-    "category": "concurrency",
-    "source": "algorithms/caching/CACHING_NOTES.md",
-    "id": "a922a45c",
-    "created": "2026-10-06"
-  },
-  {
     "question": "`put` does `with self._lock:` and then calls `self.evict()`, which also does `with self._lock:`. What happens, and what's the clean fix?",
     "answer": "**Deadlock.** A plain `threading.Lock` isn't reentrant, so the same thread blocks forever waiting on itself.\n\nFix: **public methods take the lock; `_private` helpers never do** (they assume the caller already holds it). `RLock` also works, but the convention is cleaner.",
     "category": "concurrency",
@@ -112,43 +96,11 @@
     "created": "2026-10-06"
   },
   {
-    "question": "Your socket server stores `SET foo bar` but `GET foo` from `nc` returns None. What are the two likely causes?",
-    "answer": "1. **The trailing newline:** `nc` sends `GET foo\\n`, which splits into `[\"GET\", \"foo\\n\"]`, so you look up the key `\"foo\\n\"`. Fix: `cmd.strip().split()`.\n2. **A new cache per connection:** creating the `TTLCache` inside the `accept()` loop wipes the data on every new client. Create it once, before the loop.",
-    "category": "networking",
-    "source": "session: cache_server returns None",
-    "id": "48b9c230",
-    "created": "2026-10-06"
-  },
-  {
     "question": "Why is `data = sock.recv(1024)` the wrong way to read one command at a time?",
     "answer": "TCP is a **byte stream**, not a message stream. `recv` can return part of a command or several commands at once.\n\nFor a line protocol, buffer until `\\n`, e.g. loop over `conn.makefile('r')` line by line.",
     "category": "networking",
     "source": "session: cache_server returns None",
     "id": "493b3db3",
-    "created": "2026-10-06"
-  },
-  {
-    "question": "Why does `while True: print(sys.stdin.read())` spin and print blank lines forever?",
-    "answer": "`read()` reads **everything until EOF**. After EOF, every call returns `\"\"` right away, so the loop never blocks.\n\nTo keep listening, read line by line: `for line in sys.stdin:` (blocks for each line and ends on Ctrl-D).",
-    "category": "python",
-    "source": "session: cache_server stdin loop",
-    "id": "50cebffc",
-    "created": "2026-10-06"
-  },
-  {
-    "question": "`python algorithms/server/cache_server.py` fails with `attempted relative import with no known parent package`. Why, and how do you fix it?",
-    "answer": "Running a file directly makes it `__main__`, which belongs to no package, so `..` has nothing to refer to. Python also puts the **script's own folder** on `sys.path`, not the repo root.\n\nFixes:\n- Run it as a module from the repo root: `python -m algorithms.server.cache_server`\n- Use absolute imports (`from algorithms.caching.caching import TTLCache`) and install the project editable (`uv sync` / `uv pip install -e .`).",
-    "category": "python-packaging",
-    "source": "session: why doesn't import work",
-    "id": "55a0fff9",
-    "created": "2026-10-06"
-  },
-  {
-    "question": "Why did `uv sync` not install the `algorithms` package until `pyproject.toml` got a `[build-system]` section?",
-    "answer": "Without a build backend, uv treats the project as a plain (virtual) workspace and installs only its dependencies, not the project itself. Adding `[build-system]` (hatchling) makes it installable, and uv installs it **editable**, so code changes apply without reinstalling.",
-    "category": "python-packaging",
-    "source": "session: why doesn't import work",
-    "id": "20d1fc58",
     "created": "2026-10-06"
   },
   {
@@ -181,14 +133,6 @@
     "category": "graphs",
     "source": "session: word ladder performance",
     "id": "a287fe1f",
-    "created": "2026-10-06"
-  },
-  {
-    "question": "Word Ladder II (all shortest paths): why does normal visited-on-enqueue drop valid answers, and what's the fix?",
-    "answer": "Two shortest paths can pass through the same word from different parents at the **same level**. Visited-on-enqueue blocks the second one.\n\nFix: mark visited **per level**. Collect `level_visited` and merge it into `visited` only after the whole level is done. Stop after the level where you first reach the end.",
-    "category": "graphs",
-    "source": "session: word ladder II",
-    "id": "e8a1a4ed",
     "created": "2026-10-06"
   },
   {
@@ -257,7 +201,7 @@
   },
   {
     "question": "Running median of a stream: what's the structure and the invariant?",
-    "answer": "**Two heaps:** a max-heap for the lower half and a min-heap for the upper half. Push to the correct side, then rebalance so their sizes differ by at most 1.\n\nMedian = the top of the larger heap, or the average of both tops when the sizes are equal. O(log n) per insert, O(1) to read.",
+    "answer": "**Two heaps:** a max-heap for the lower half and a min-heap for the upper half. Push to the correct side, then rebalance so their sizes differ by at most 1.\n\nMedian = the top of the larger heap, or the average of both tops when the sizes are equal. O(log n) per insert, O(1) to read.\n\nelement belongs on max heap when item <= max_h[0]\non min heap when item > min_h[0]\n\nthen rebalance!",
     "category": "streaming",
     "source": "algorithms/streaming/streaming.py",
     "id": "280ad9ef",

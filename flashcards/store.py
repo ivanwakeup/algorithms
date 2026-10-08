@@ -5,6 +5,7 @@ from datetime import date
 from pathlib import Path
 
 CARDS_PATH = Path(__file__).parent / "cards.json"
+CURRENT_PATH = Path(__file__).parent / ".current"  # id of the card on screen; gitignored
 
 
 @dataclass
@@ -54,6 +55,17 @@ def update_card(card_id, question, answer, path=CARDS_PATH):
             save_cards(cards, path)
             return card
     return None
+
+
+def set_current(card_id, path=CURRENT_PATH):
+    path.write_text(card_id)
+
+
+def get_current(path=CURRENT_PATH, cards_path=CARDS_PATH):
+    if not path.exists():
+        return None
+    card_id = path.read_text().strip()
+    return next((c for c in load_cards(cards_path) if c.id == card_id), None)
 
 
 def delete_card(card_id, path=CARDS_PATH):

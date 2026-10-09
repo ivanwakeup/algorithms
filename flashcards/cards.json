@@ -334,5 +334,13 @@
     "source": "session: filesystem trees",
     "id": "9efee08d",
     "created": "2026-10-08"
+  },
+  {
+    "question": "What is a shortcoming of supporting mkdir like \"a/b/c\" if b doesn't already exist?",
+    "answer": "if you misspell one of the directories in your directory chain, its a bit tedious to delete all of the directories beneath it, for example. could always do that with a rm --recursive flag though",
+    "category": "filesystems",
+    "source": "",
+    "id": "c44802a3",
+    "created": "2026-10-08"
   }
 ]

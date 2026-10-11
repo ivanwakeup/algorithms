@@ -72,6 +72,15 @@ class FileSystem:
                 raise InvalidPathError(f"{cur.name} is a file!")
 
 
+    def _walk(self, path):
+        cur = self.root
+        path, suffix = path[:1], path[1:]
+        for item in path:
+            if item not in cur.children:
+
+
+
+
     def _get_path_list(self, dir_str):
         special_chars = ["$", "\\"]
         if any(c in dir_str for c in special_chars):

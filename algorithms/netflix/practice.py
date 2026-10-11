@@ -45,6 +45,55 @@ def is_dupe_time_window(users, window=5):
                 result.append(key)
                 break
     return result
+
+
+from dataclasses import dataclass
+
+@dataclass
+class MovieState:
+    title_id: str
+    score: float
+    version: int
+
+from queue import PriorityQueue
+class MovieBillboardService:
+
+    def __init__(self) -> None:
+        self.current_movie = None
+        self.pq = PriorityQueue()
+        self.hm = {}
+
+    def upsert_title(self, title_id, score):
+        #always just add the latest version to the map
+        version = self.hm[title_id].version+1 if title_id in self.hm else 1
+        movie = MovieState(title_id, score, version)
+        self.hm[title_id] = movie
+
+        if self.current_movie and title_id == self.current_movie.title_id:
+            self.current_movie = movie
+        else:
+            self.pq.put((-movie.score, movie.title_id, movie.version))
+
+    def get_top_title(self):
+        #the current movie is never in the pq, so any valid entry is a different title
+        while not self.pq.empty():
+            score, title, version = self.pq.get()
+            if version != self.hm[title].version:
+                continue
+            if self.current_movie:
+                cur = self.current_movie
+                self.pq.put((-cur.score, cur.title_id, cur.version))
+            self.current_movie = self.hm[title]
+            return self.current_movie
+        return None
+
+
+
+                
+
+
+
+        
     
     
     

@@ -342,5 +342,21 @@
     "source": "",
     "id": "c44802a3",
     "created": "2026-10-08"
+  },
+  {
+    "question": "What are some helpful ideas when performing lazy deletion or removing items from a heap?\n",
+    "answer": "1. lazy deletion only really works for items that are permanently invalid, not temporarily. A.k.a. you can truly delete them\n\n2. if a heap entry is temporarily invalid, should it be on your heap at all? does it need to be?",
+    "category": "heaps",
+    "source": "",
+    "id": "314b365a",
+    "created": "2026-10-12"
+  },
+  {
+    "question": "why does storing data directly in a filesystem node pose memory challenges?",
+    "answer": "because as your file grows and shrinks (and across many files in your fs node), data becomes highly fragmented--the o.s. has to keep reallocating new space for data changes.\n\nalso, if you store data on the node directly, hardlinks turn your tree into a graph-->you now potentially have multiple places pointing towards the same FSNode",
+    "category": "filesystems",
+    "source": "",
+    "id": "e0a88fc4",
+    "created": "2026-10-13"
   }
 ]
